@@ -242,6 +242,11 @@ input,select{
 .sw[aria-checked="true"]{background:var(--rain); justify-content:flex-end}
 .sbtn{margin:14px 10px 0 0}
 .about{color:var(--muted); font-size:.85rem; margin:20px 0 0}
+.topic{
+  display:block; padding:9px 12px; border-radius:10px; border:1px solid var(--line); background:var(--field);
+  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; word-break:break-all;
+  -webkit-user-select:all; user-select:all; direction:ltr; text-align:left;
+}
 </style>
 </head>
 <body>
@@ -572,6 +577,116 @@ I18N.it.here="La tua posizione";
 I18N.tr.here="Konumun";
 I18N.ar.here="موقعك";
 I18N.zh.here="你的位置";
+I18N.en.se_push="Pings when the app is closed";
+I18N.en.push_s1="1. Install the free ntfy app and subscribe to your topic.";
+I18N.en.push_s2="2. Copy the setup and paste it into a new GitHub file named .github/workflows/rain-alerts.yml";
+I18N.en.push_topic="Your topic";
+I18N.en.push_copy_topic="Copy topic";
+I18N.en.push_copy_setup="Copy GitHub setup";
+I18N.en.copied="Copied.";
+I18N.en.copy_fail="Could not copy. Tap the button once more.";
+I18N.en.se_quiet="Quiet hours (no pings)";
+I18N.en.se_quiet_from="From";
+I18N.en.se_quiet_to="Until";
+I18N.nl.se_push="Meldingen als de app dicht is";
+I18N.nl.push_s1="1. Installeer de gratis ntfy-app en abonneer je op je topic.";
+I18N.nl.push_s2="2. Kopieer de setup en plak die in een nieuw GitHub-bestand met de naam .github/workflows/rain-alerts.yml";
+I18N.nl.push_topic="Jouw topic";
+I18N.nl.push_copy_topic="Topic kopiëren";
+I18N.nl.push_copy_setup="GitHub-setup kopiëren";
+I18N.nl.copied="Gekopieerd.";
+I18N.nl.copy_fail="Kopiëren mislukt. Tik nog een keer op de knop.";
+I18N.nl.se_quiet="Stille uren (geen meldingen)";
+I18N.nl.se_quiet_from="Van";
+I18N.nl.se_quiet_to="Tot";
+I18N.es.se_push="Avisos con la app cerrada";
+I18N.es.push_s1="1. Instala la app gratuita ntfy y suscríbete a tu tema.";
+I18N.es.push_s2="2. Copia la configuración y pégala en un archivo nuevo de GitHub llamado .github/workflows/rain-alerts.yml";
+I18N.es.push_topic="Tu tema";
+I18N.es.push_copy_topic="Copiar tema";
+I18N.es.push_copy_setup="Copiar configuración de GitHub";
+I18N.es.copied="Copiado.";
+I18N.es.copy_fail="No se pudo copiar. Vuelve a tocar el botón.";
+I18N.es.se_quiet="Horas de silencio (sin avisos)";
+I18N.es.se_quiet_from="Desde";
+I18N.es.se_quiet_to="Hasta";
+I18N.fr.se_push="Alertes quand l’app est fermée";
+I18N.fr.push_s1="1. Installez l’app gratuite ntfy et abonnez-vous à votre sujet.";
+I18N.fr.push_s2="2. Copiez la configuration et collez-la dans un nouveau fichier GitHub nommé .github/workflows/rain-alerts.yml";
+I18N.fr.push_topic="Votre sujet";
+I18N.fr.push_copy_topic="Copier le sujet";
+I18N.fr.push_copy_setup="Copier la configuration GitHub";
+I18N.fr.copied="Copié.";
+I18N.fr.copy_fail="Copie impossible. Touchez à nouveau le bouton.";
+I18N.fr.se_quiet="Heures calmes (sans alerte)";
+I18N.fr.se_quiet_from="De";
+I18N.fr.se_quiet_to="Jusqu’à";
+I18N.de.se_push="Hinweise bei geschlossener App";
+I18N.de.push_s1="1. Installiere die kostenlose ntfy-App und abonniere dein Thema.";
+I18N.de.push_s2="2. Kopiere die Einrichtung und füge sie in eine neue GitHub-Datei mit dem Namen .github/workflows/rain-alerts.yml ein.";
+I18N.de.push_topic="Dein Thema";
+I18N.de.push_copy_topic="Thema kopieren";
+I18N.de.push_copy_setup="GitHub-Einrichtung kopieren";
+I18N.de.copied="Kopiert.";
+I18N.de.copy_fail="Kopieren fehlgeschlagen. Tippe die Schaltfläche noch einmal an.";
+I18N.de.se_quiet="Ruhezeiten (keine Hinweise)";
+I18N.de.se_quiet_from="Von";
+I18N.de.se_quiet_to="Bis";
+I18N.pt.se_push="Avisos com o app fechado";
+I18N.pt.push_s1="1. Instale o app gratuito ntfy e assine o seu tópico.";
+I18N.pt.push_s2="2. Copie a configuração e cole em um novo arquivo do GitHub chamado .github/workflows/rain-alerts.yml";
+I18N.pt.push_topic="Seu tópico";
+I18N.pt.push_copy_topic="Copiar tópico";
+I18N.pt.push_copy_setup="Copiar configuração do GitHub";
+I18N.pt.copied="Copiado.";
+I18N.pt.copy_fail="Não foi possível copiar. Toque no botão de novo.";
+I18N.pt.se_quiet="Horário silencioso (sem avisos)";
+I18N.pt.se_quiet_from="De";
+I18N.pt.se_quiet_to="Até";
+I18N.it.se_push="Avvisi con l’app chiusa";
+I18N.it.push_s1="1. Installa l’app gratuita ntfy e iscriviti al tuo argomento.";
+I18N.it.push_s2="2. Copia la configurazione e incollala in un nuovo file GitHub chiamato .github/workflows/rain-alerts.yml";
+I18N.it.push_topic="Il tuo argomento";
+I18N.it.push_copy_topic="Copia argomento";
+I18N.it.push_copy_setup="Copia configurazione GitHub";
+I18N.it.copied="Copiato.";
+I18N.it.copy_fail="Impossibile copiare. Tocca di nuovo il pulsante.";
+I18N.it.se_quiet="Ore di silenzio (nessun avviso)";
+I18N.it.se_quiet_from="Dalle";
+I18N.it.se_quiet_to="Alle";
+I18N.tr.se_push="Uygulama kapalıyken bildirimler";
+I18N.tr.push_s1="1. Ücretsiz ntfy uygulamasını yükle ve konuna abone ol.";
+I18N.tr.push_s2="2. Kurulumu kopyala ve .github/workflows/rain-alerts.yml adlı yeni bir GitHub dosyasına yapıştır.";
+I18N.tr.push_topic="Konun";
+I18N.tr.push_copy_topic="Konuyu kopyala";
+I18N.tr.push_copy_setup="GitHub kurulumunu kopyala";
+I18N.tr.copied="Kopyalandı.";
+I18N.tr.copy_fail="Kopyalanamadı. Düğmeye bir kez daha dokun.";
+I18N.tr.se_quiet="Sessiz saatler (bildirim yok)";
+I18N.tr.se_quiet_from="Başlangıç";
+I18N.tr.se_quiet_to="Bitiş";
+I18N.ar.se_push="تنبيهات والتطبيق مغلق";
+I18N.ar.push_s1="1. ثبّت تطبيق ntfy المجاني واشترك في موضوعك.";
+I18N.ar.push_s2="2. انسخ الإعداد والصقه في ملف GitHub جديد باسم .github/workflows/rain-alerts.yml";
+I18N.ar.push_topic="موضوعك";
+I18N.ar.push_copy_topic="نسخ الموضوع";
+I18N.ar.push_copy_setup="نسخ إعداد GitHub";
+I18N.ar.copied="تم النسخ.";
+I18N.ar.copy_fail="تعذر النسخ. اضغط الزر مرة أخرى.";
+I18N.ar.se_quiet="ساعات الهدوء (بدون تنبيهات)";
+I18N.ar.se_quiet_from="من";
+I18N.ar.se_quiet_to="إلى";
+I18N.zh.se_push="应用关闭时的提醒";
+I18N.zh.push_s1="1. 安装免费的 ntfy 应用并订阅你的主题。";
+I18N.zh.push_s2="2. 复制设置，并粘贴到名为 .github/workflows/rain-alerts.yml 的新 GitHub 文件中。";
+I18N.zh.push_topic="你的主题";
+I18N.zh.push_copy_topic="复制主题";
+I18N.zh.push_copy_setup="复制 GitHub 设置";
+I18N.zh.copied="已复制。";
+I18N.zh.copy_fail="复制失败。请再点一次按钮。";
+I18N.zh.se_quiet="免打扰时段（不提醒）";
+I18N.zh.se_quiet_from="从";
+I18N.zh.se_quiet_to="到";
 
 /* ---------- constants ---------- */
 var W=640,H=300,L=44,R=14,T=14,B=30,PW=W-L-R,PH=H-T-B;
@@ -580,7 +695,7 @@ var LOCS={en:'en',nl:'nl',es:'es',fr:'fr',de:'de',pt:'pt-BR',it:'it',tr:'tr',ar:
 var TABKEYS=['today','charts','week','places','settings'];
 var HERE='@here';
 var DEF={lang:'',theme:'auto',sky:true,temp:'c',wind:'kmh',rain:'mm',time:'24',start:'today',refresh:10,
-  a_on:true,a_start:true,a_stop:false,a_dry:true,a_storm:true,a_lead:15,a_phone:false};
+  a_on:true,a_start:true,a_stop:false,a_dry:true,a_storm:true,a_lead:15,a_phone:false,q_on:false,q_from:23,q_to:7};
 var cfg={};
 var state={mode:'rain',data:null,now:null,place:null,cur:null,live:false,results:null,searched:false};
 var ch=null,loadedAt=0,tabIdx=0;
@@ -1260,8 +1375,14 @@ var SCHEMA=[
     {k:'a_lead',t:'select',l:'se_lead',o:function(){return [[10,'10 '+t('d_min')],[15,'15 '+t('d_min')],[30,'30 '+t('d_min')]];}},
     {k:'a_phone',t:'phone',l:'se_phone'},
     {t:'note'},
-    {t:'test'}]}
+    {t:'test'}]},
+  {h:'se_push',rows:[
+    {t:'push'},
+    {k:'q_on',t:'sw',l:'se_quiet'},
+    {k:'q_from',t:'select',l:'se_quiet_from',if:'q_on',o:function(){return hourOpts();}},
+    {k:'q_to',t:'select',l:'se_quiet_to',if:'q_on',o:function(){return hourOpts();}}]}
 ];
+function hourOpts(){var a=[],i;for(i=0;i<24;i++)a.push([i,fmtH(new Date(2000,0,1,i))]);return a;}
 function phoneStatus(){
   if(typeof Notification==='undefined')return t('ph_nosupport');
   if(Notification.permission==='denied')return t('ph_denied');
@@ -1272,8 +1393,14 @@ function renderSettings(){
   SCHEMA.forEach(function(sec){
     h+='<h3 class="sec">'+esc(t(sec.h))+'</h3>';
     sec.rows.forEach(function(r){
+      if(r.if&&!cfg[r.if])return;
       var v=cfg[r.k];
-      if(r.t==='sw'){
+      if(r.t==='push'){
+        h+='<div class="srow"><p class="snote" style="margin:0 0 6px">'+esc(t('push_s1'))+'</p><p class="snote" style="margin:0 0 12px">'+esc(t('push_s2'))+'</p>'+
+          '<span class="sl">'+esc(t('push_topic'))+'</span><code class="topic">'+esc(getTopic())+'</code>'+
+          '<button type="button" class="sbtn" data-act="copytopic">'+esc(t('push_copy_topic'))+'</button>'+
+          '<button type="button" class="sbtn" data-act="copysetup">'+esc(t('push_copy_setup'))+'</button></div>';
+      }else if(r.t==='sw'){
         h+='<div class="srow inline"><span class="sl">'+esc(t(r.l))+'</span><button type="button" class="sw" role="switch" aria-checked="'+(v?'true':'false')+'" aria-label="'+esc(t(r.l))+'" data-sw="'+r.k+'"><i></i></button></div>';
       }else if(r.t==='phone'){
         h+='<div class="srow"><div class="srow inline" style="padding:0;border:0"><span class="sl">'+esc(t(r.l))+'</span><button type="button" class="sw" role="switch" aria-checked="'+(cfg.a_phone?'true':'false')+'" aria-label="'+esc(t(r.l))+'" data-sw="a_phone"><i></i></button></div><p class="snote">'+esc(phoneStatus())+'</p></div>';
@@ -1327,11 +1454,11 @@ function renderAll(){
 }
 function afterChange(k){
   if(k==='refresh'){renderSettings();return;}
-  if(k==='start'||k.indexOf('a_')===0){renderSettings();return;}
+  if(k==='start'||k.indexOf('a_')===0||k.indexOf('q_')===0){renderSettings();return;}
   applyCfg();renderAll();
 }
 function setKey(k,val){
-  if(k==='refresh'||k==='a_lead')val=+val;
+  if(k==='refresh'||k==='a_lead'||k==='q_from'||k==='q_to')val=+val;
   cfg[k]=val;saveCfg();afterChange(k);
 }
 function onSettingsClick(e){
@@ -1345,6 +1472,12 @@ function onSettingsClick(e){
   }
   var act=el.getAttribute('data-act');
   if(act==='test'){fireAlert({title:t('al_test_t'),body:t('al_test_b')},true);}
+  else if(act==='copytopic'){copyText(getTopic());}
+  else if(act==='copysetup'){
+    var y=buildWorkflow();
+    if(!y){status(t('st_sample'));return;}
+    copyText(y);
+  }
   else if(act==='reset'){
     var keepLang=cfg.lang;
     cfg={};for(var x in DEF)cfg[x]=DEF[x];cfg.lang=keepLang;
@@ -1407,6 +1540,169 @@ function evaluateAlerts(){
   as.wet=wetNow;as.at=now;
   lsSet('rl_alert',JSON.stringify(as));
   list.forEach(function(a){fireAlert(a,false);});
+}
+
+/* ---------- real pings: ntfy topic + GitHub Actions setup ---------- */
+var WFSCRIPT=String.raw`// Rainline alerts. Runs on GitHub Actions and sends pings through ntfy.sh
+const cfg = JSON.parse(process.env.CFG);
+const tx = cfg.tx;
+const now = Date.now();
+const TOPIC_URL = 'https://ntfy.sh/' + cfg.topic;
+
+function fill(s, v) { for (const k in v) s = s.split('{' + k + '}').join(v[k]); return s; }
+function dur(m) {
+  return m < 60 ? m + ' ' + tx.d_min : Math.floor(m / 60) + ' ' + tx.d_h + (m % 60 ? ' ' + (m % 60) + ' ' + tx.d_min : '');
+}
+async function getJSON(u) {
+  const r = await fetch(u);
+  if (!r.ok) throw new Error(u + ' -> ' + r.status);
+  return r.json();
+}
+
+// Rain per hour for the next ~2 hours, plus whether it rained in the last hour
+async function nowcast() {
+  const la = cfg.lat, lo = cfg.lon;
+  let step = 15, mm = [], wetRecently = false;
+  try {
+    const j = await getJSON('https://api.open-meteo.com/v1/forecast?latitude=' + la + '&longitude=' + lo +
+      '&minutely_15=precipitation&current_weather=true&forecast_days=2&timezone=auto');
+    const times = j.minutely_15.time, prec = j.minutely_15.precipitation;
+    let idx = times.findIndex(x => x >= j.current_weather.time);
+    if (idx < 0) idx = 0;
+    for (let k = 0; k < 9 && idx + k < times.length; k++) mm.push((prec[idx + k] || 0) * 4);
+    for (let k = 1; k <= 4 && idx - k >= 0; k++) if ((prec[idx - k] || 0) * 4 >= 0.1) wetRecently = true;
+  } catch (e) { console.log('Open-Meteo failed:', e.message); }
+  if (la >= 50 && la <= 54 && lo >= 1 && lo <= 10) {
+    try {
+      const r = await fetch('https://gadgets.buienradar.nl/data/raintext?lat=' + la.toFixed(2) + '&lon=' + lo.toFixed(2));
+      if (r.ok) {
+        const rows = (await r.text()).trim().split(/\s+/).filter(x => x.indexOf('|') > 0);
+        if (rows.length >= 6) {
+          step = 5;
+          mm = rows.map(x => {
+            const v = parseFloat(x.split('|')[0].replace(',', '.'));
+            return (!isFinite(v) || v <= 0) ? 0 : Math.pow(10, (v - 109) / 32);
+          });
+        }
+      }
+    } catch (e) { console.log('Buienradar failed:', e.message); }
+  }
+  if (!mm.length) throw new Error('No rain data available');
+  return { step: step, mm: mm, wetRecently: wetRecently };
+}
+
+// ntfy keeps messages for 12 hours, so the topic doubles as our memory (no repeats)
+async function history() {
+  try {
+    const r = await fetch(TOPIC_URL + '/json?poll=1&since=12h');
+    const rows = (await r.text()).trim().split('\n').filter(Boolean);
+    const out = [];
+    for (const l of rows) {
+      try { const m = JSON.parse(l); if (m.event === 'message') out.push(m); } catch (e) { /* skip */ }
+    }
+    return out;
+  } catch (e) { return []; }
+}
+function last(hist, tag) {
+  let b = 0;
+  for (const m of hist) if ((m.tags || []).indexOf(tag) >= 0 && m.time > b) b = m.time;
+  return b * 1000;
+}
+function quietNow() {
+  if (!cfg.quiet) return false;
+  const a = cfg.quiet[0], b = cfg.quiet[1];
+  if (a === b) return false;
+  const h = parseInt(new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone: cfg.tz || 'UTC' }).format(new Date()), 10);
+  return a < b ? (h >= a && h < b) : (h >= a || h < b);
+}
+async function send(tag, emoji, title, message, priority) {
+  const r = await fetch('https://ntfy.sh/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ topic: cfg.topic, title: title, message: message, tags: [tag, emoji], priority: priority, click: cfg.url })
+  });
+  if (!r.ok) throw new Error('ntfy -> ' + r.status);
+  console.log('Sent', tag);
+}
+
+async function main() {
+  if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
+    await send('rl-test', 'white_check_mark', tx.al_test_t, tx.al_test_b, 3);
+    return;
+  }
+  const hist = await history();
+  const nc = await nowcast(), mm = nc.mm, step = nc.step;
+  const wet = x => x >= 0.1, wetNow = wet(mm[0]);
+  let first = -1, stop = -1;
+  for (let i = 0; i < mm.length; i++) if (wet(mm[i])) { first = i; break; }
+  if (wetNow) for (let i = 1; i < mm.length; i++) if (!wet(mm[i])) { stop = i; break; }
+  console.log('wetNow:', wetNow, '| rain starts in (min):', first < 0 ? 'none' : first * step, '| stops in (min):', stop < 0 ? 'none' : stop * step);
+
+  const todo = [];
+  if (cfg.start && !wetNow && first > 0 && first * step <= cfg.lead && now - last(hist, 'rl-start') > 60 * 60000) {
+    todo.push(['rl-start', 'cloud_with_rain', tx.al_start_t, fill(tx.al_start_b, { d: dur(first * step) }), 4]);
+  }
+  if (cfg.stop && wetNow && stop > 0 && stop * step <= cfg.lead && now - last(hist, 'rl-stop') > 30 * 60000) {
+    todo.push(['rl-stop', 'partly_sunny', tx.al_stop_t, fill(tx.al_stop_b, { d: dur(stop * step) }), 3]);
+  }
+  if (cfg.dry && !wetNow && nc.wetRecently && now - last(hist, 'rl-dry') > 60 * 60000) {
+    todo.push(['rl-dry', 'sunny', tx.al_dry_t, tx.al_dry_b, 3]);
+  }
+  if (cfg.storm && now - last(hist, 'rl-storm') > 12 * 3600000) {
+    try {
+      const d = await getJSON('https://api.open-meteo.com/v1/forecast?latitude=' + cfg.lat + '&longitude=' + cfg.lon +
+        '&daily=weather_code&timezone=auto&forecast_days=1');
+      if (d.daily && d.daily.weather_code[0] >= 95) {
+        todo.push(['rl-storm', 'thunder_cloud_and_rain', tx.al_storm_t, tx.al_storm_b, 4]);
+      }
+    } catch (e) { console.log('Storm check failed:', e.message); }
+  }
+  if (quietNow()) { console.log('Quiet hours: nothing sent'); return; }
+  for (const a of todo) await send(a[0], a[1], a[2], a[3], a[4]);
+  if (!todo.length) console.log('Nothing to send');
+}
+main().catch(e => { console.error(e); process.exit(1); });
+`;
+function getTopic(){
+  var tp=lsGet('rl_topic');
+  if(!tp){
+    var a=new Uint8Array(10),i;
+    try{crypto.getRandomValues(a);}catch(e){for(i=0;i<10;i++)a[i]=Math.floor(Math.random()*256);}
+    tp='rainline-'+Array.prototype.map.call(a,function(b){return ('0'+b.toString(16)).slice(-2);}).join('');
+    lsSet('rl_topic',tp);
+  }
+  return tp;
+}
+function tzName(){
+  try{return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';}catch(e){return 'UTC';}
+}
+function buildWorkflow(){
+  var c=state.cur;
+  if(!c||!state.live)return null;
+  var tx={};
+  ['al_start_t','al_start_b','al_stop_t','al_stop_b','al_dry_t','al_dry_b','al_storm_t','al_storm_b','al_test_t','al_test_b','d_min','d_h'].forEach(function(k){tx[k]=t(k);});
+  var conf={topic:getTopic(),lat:+c.lat,lon:+c.lon,lead:+cfg.a_lead,start:!!cfg.a_start,stop:!!cfg.a_stop,dry:!!cfg.a_dry,storm:!!cfg.a_storm,
+    quiet:cfg.q_on?[+cfg.q_from,+cfg.q_to]:null,tz:tzName(),url:location.origin+location.pathname,tx:tx};
+  function ind(txt,n){var p=new Array(n+1).join(' ');return txt.split('\n').map(function(l){return l.length?p+l:l;}).join('\n');}
+  return ['name: Rainline alerts','on:','  schedule:',"    - cron: '3-59/5 * * * *'",'  workflow_dispatch:','permissions: {}','concurrency:',
+    '  group: rainline-alerts','  cancel-in-progress: false','jobs:','  check:','    runs-on: ubuntu-latest','    timeout-minutes: 3','    env:','      CFG: |',
+    ind(JSON.stringify(conf),8),'    steps:','      - name: Check the weather and send pings','        run: |',"          node - <<'JS'",
+    ind(WFSCRIPT.replace(/\s+$/,''),10),'          JS',''].join('\n');
+}
+function copyText(txt){
+  function fallback(){
+    try{
+      var ta=document.createElement('textarea');
+      ta.value=txt;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,txt.length);
+      var ok=document.execCommand('copy');
+      document.body.removeChild(ta);
+      status(ok?t('copied'):t('copy_fail'));
+    }catch(e){status(t('copy_fail'));}
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){status(t('copied'));},fallback);
+  }else fallback();
 }
 
 /* ---------- swipeable tabs ---------- */
@@ -1522,7 +1818,7 @@ if(saved){refreshSaved(false);}
 else{status(t('st_sample'));}
 
 if(typeof window!=='undefined'&&window.__RL_TEST){
-  window.__RL_TEST={state:state,get cfg(){return cfg;},t:t,evaluateAlerts:evaluateAlerts,setKey:setKey,renderAll:renderAll,goTab:goTab,parseBuienradar:parseBuienradar,I18N:I18N,setActive:setActive,setMode:setMode,fireAlert:fireAlert,codeInfo:codeInfo,icon:icon};
+  window.__RL_TEST={state:state,get cfg(){return cfg;},t:t,evaluateAlerts:evaluateAlerts,setKey:setKey,renderAll:renderAll,goTab:goTab,parseBuienradar:parseBuienradar,I18N:I18N,setActive:setActive,setMode:setMode,fireAlert:fireAlert,codeInfo:codeInfo,icon:icon,buildWorkflow:buildWorkflow,getTopic:getTopic};
 }
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   navigator.serviceWorker.register('sw.js').catch(function(){});
