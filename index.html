@@ -16,7 +16,7 @@
 :root{
   --bg:#EAF0F2; --surface:#F7FAFB; --ink:#10242C; --muted:#586E77; --line:#C9D6DB;
   --rain:#1D3FD6; --warm:#C9721F; --wind:#0E7C7B; --field:#FFFFFF;
-  --sun:#E99A0C; --cloud:#93A9B3; --snow:#7FA8DD; --sky:transparent;
+  --sun:#E99A0C; --cloud:#93A9B3; --snow:#7FA8DD; --moon:#D9A82E; --sky:transparent;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -25,13 +25,13 @@
   :root:not([data-theme="light"]){
     --bg:#0C171C; --surface:#13232A; --ink:#E4EEF1; --muted:#8CA3AC; --line:#25404A;
     --rain:#7C9BFF; --warm:#F0A552; --wind:#5FD3C8; --field:#0C171C;
-    --sun:#F6C453; --cloud:#7C929C; --snow:#9CC0F0;
+    --sun:#F6C453; --cloud:#7C929C; --snow:#9CC0F0; --moon:#F3DC8A;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0C171C; --surface:#13232A; --ink:#E4EEF1; --muted:#8CA3AC; --line:#25404A;
   --rain:#7C9BFF; --warm:#F0A552; --wind:#5FD3C8; --field:#0C171C;
-  --sun:#F6C453; --cloud:#7C929C; --snow:#9CC0F0;
+  --sun:#F6C453; --cloud:#7C929C; --snow:#9CC0F0; --moon:#F3DC8A;
 }
 :root[data-sky="sun"]{--sky:rgba(245,176,40,.30)}
 :root[data-sky="partly"]{--sky:rgba(200,190,150,.28)}
@@ -40,69 +40,128 @@
 :root[data-sky="rain"]{--sky:rgba(50,90,220,.24)}
 :root[data-sky="storm"]{--sky:rgba(90,70,170,.30)}
 :root[data-sky="snow"]{--sky:rgba(150,190,235,.34)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+:root[data-sky="moon"],:root[data-sky="moonpartly"]{--sky:rgba(60,70,170,.30)}
+html,body{height:100%}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{
-  margin:0; color:var(--ink);
-  background:linear-gradient(180deg,var(--sky) 0,rgba(0,0,0,0) 460px) no-repeat, var(--bg);
+  margin:0; overflow:hidden; color:var(--ink);
+  background:linear-gradient(180deg,var(--sky) 0,rgba(0,0,0,0) 420px) no-repeat, var(--bg);
   font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   line-height:1.45; -webkit-font-smoothing:antialiased;
 }
-main{max-width:640px; margin:0 auto; padding:22px 18px 40px}
 a{color:var(--rain)}
+button{
+  font:inherit; cursor:pointer; border-radius:999px; border:1px solid var(--line);
+  background:transparent; color:var(--ink); padding:10px 16px;
+}
+:focus-visible{outline:3px solid var(--rain); outline-offset:2px}
+.app{
+  display:flex; flex-direction:column;
+  height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+  height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+}
+.wrap{max-width:640px; margin:0 auto; width:100%}
 
-/* header */
-.top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px}
+/* header + tabs */
+.bar{flex:none; padding:10px 18px 0}
+.top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px}
 .place{
   display:flex; align-items:center; gap:8px; margin:0;
-  font-size:clamp(1.5rem,6.4vw,2.1rem); font-weight:800; letter-spacing:-.02em; line-height:1.15;
+  font-size:clamp(1.35rem,5.6vw,1.8rem); font-weight:800; letter-spacing:-.02em; line-height:1.15;
 }
 .place svg{flex:none; color:var(--rain)}
-.date{color:var(--muted); font-size:.95rem; margin:2px 0 0}
-.status{color:var(--muted); font-size:.9rem; margin:6px 0 0; min-height:0}
+.date{color:var(--muted); font-size:.9rem; margin:1px 0 0}
+.status{color:var(--muted); font-size:.85rem; margin:2px 0 0}
 .status:empty{display:none}
-.change{margin:10px 0 0}
-.panel{margin:12px 0 0}
+.acts{display:flex; gap:2px; flex:none}
+.iconbtn{border:0; padding:8px; line-height:0; border-radius:50%}
+.iconbtn svg{width:22px; height:22px}
+.iconbtn:disabled{opacity:.35; cursor:default}
+.star svg path{fill:none; stroke:var(--ink); stroke-width:1.8; stroke-linejoin:round}
+.star[aria-pressed="true"] svg path{fill:var(--sun); stroke:var(--sun)}
+.iconbtn svg.spin{animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.iconbtn svg.spin{animation:none}}
+.tabs{
+  position:relative; display:flex; overflow-x:auto; margin:8px -18px 0; padding:0 8px;
+  border-bottom:1px solid var(--line); scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:1 0 auto; border:0; border-radius:0; background:none; white-space:nowrap;
+  padding:11px 12px; color:var(--muted); font-weight:600; font-size:.95rem;
+}
+.tab[aria-selected="true"]{color:var(--ink)}
+.ind{position:absolute; bottom:0; left:0; height:3px; width:0; border-radius:3px; background:var(--rain); pointer-events:none}
 
-/* hero */
-.hero{display:flex; align-items:center; gap:18px; margin:22px 0 4px}
+/* alert banner */
+.banner{
+  flex:none; display:flex; align-items:center; gap:10px; margin:8px auto 0;
+  width:calc(100% - 36px); max-width:604px; padding:10px 14px; border-radius:14px;
+  background:var(--ink); color:var(--bg);
+}
+.banner span{flex:1; cursor:pointer}
+.banner b{font-weight:800}
+.banner button{flex:none; border:0; padding:2px 8px; color:var(--bg); font-size:1.3rem; line-height:1}
+
+/* swipeable panes */
+.pager{
+  flex:1; min-height:0; display:flex; overflow-x:auto; overflow-y:hidden;
+  scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+}
+.pager::-webkit-scrollbar{display:none}
+.pane{
+  flex:0 0 100%; min-width:0; scroll-snap-align:start; scroll-snap-stop:always;
+  overflow-y:auto; overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch;
+}
+.in{max-width:640px; margin:0 auto; padding:16px 18px 36px}
+body.rtl .pane, body.rtl .top, body.rtl .banner{direction:rtl}
+body.rtl #chart, body.rtl .strip{direction:ltr}
+
+/* today */
+.hero{display:flex; align-items:center; gap:18px; margin:6px 0 4px}
 .htemp{font-size:clamp(3.4rem,15vw,4.6rem); font-weight:800; letter-spacing:-.05em; line-height:1}
-.htemp .u{font-size:.4em; font-weight:600; letter-spacing:0; vertical-align:top; margin-left:2px; color:var(--muted)}
+.htemp .u{font-size:.4em; font-weight:600; letter-spacing:0; vertical-align:top; margin-inline-start:2px; color:var(--muted)}
 .hlabel{font-size:1.15rem; font-weight:600}
-.tip{color:var(--muted); margin:6px 0 0; min-height:0}
+.tip{color:var(--muted); margin:6px 0 0}
 .tip:empty{display:none}
 .summary{
   font-size:clamp(1.35rem,5.6vw,1.9rem); line-height:1.15; font-weight:800;
   letter-spacing:-.02em; margin:22px 0 6px; max-width:20em;
 }
-.sub{color:var(--muted); margin:0 0 20px; font-size:1rem}
-.stats{display:flex; margin:0 0 26px; padding:0}
-.stats div{flex:1; padding:0 14px; border-left:1px solid var(--line)}
-.stats div:first-child{padding-left:0; border-left:0}
+.sub{color:var(--muted); margin:0 0 20px}
+.stats{display:flex; margin:0 0 22px; padding:0}
+.stats div{flex:1; padding:0 14px; border-inline-start:1px solid var(--line)}
+.stats div:first-child{padding-inline-start:0; border-inline-start:0}
 .stats dt{color:var(--muted); font-size:.85rem}
-.stats dd{margin:0; font-size:1.3rem; font-weight:800; letter-spacing:-.01em}
+.stats dd{margin:0; font-size:1.25rem; font-weight:800; letter-spacing:-.01em}
+.dry{display:flex; justify-content:space-between; gap:12px; padding:12px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.dry span{color:var(--muted)}
+.dry b{font-weight:800; text-align:end}
+.sec{font-size:1.05rem; margin:26px 0 8px; letter-spacing:-.01em}
+.strip{
+  display:flex; gap:6px; overflow-x:auto; overscroll-behavior-x:contain;
+  margin:0 -18px; padding:2px 18px 8px; scrollbar-width:none;
+}
+.strip::-webkit-scrollbar{display:none}
+.hr{
+  flex:0 0 60px; display:flex; flex-direction:column; align-items:center; gap:3px; padding:10px 0;
+  border-radius:14px; background:var(--surface); border:1px solid var(--line);
+}
+.hr .h{font-size:.78rem; color:var(--muted)}
+.hr .tp{font-weight:700}
+.hr .pp{font-size:.75rem; color:var(--rain); min-height:1.1em}
+.details{display:grid; grid-template-columns:1fr 1fr; column-gap:24px; margin:0}
+.details div{padding:12px 0; border-bottom:1px solid var(--line)}
+.details dt{color:var(--muted); font-size:.85rem}
+.details dd{margin:0; font-size:1.1rem; font-weight:700}
 
-/* controls */
-.search{display:flex; gap:8px; margin:0 0 8px}
-.search input{
-  flex:1; min-width:0; font:inherit; color:var(--ink); background:var(--field);
-  border:1px solid var(--line); border-radius:999px; padding:10px 16px;
-}
-button{
-  font:inherit; cursor:pointer; border-radius:999px; border:1px solid var(--line);
-  background:transparent; color:var(--ink); padding:10px 16px;
-}
-.search button{background:var(--ink); color:var(--bg); border-color:var(--ink); font-weight:600}
-.ghost{padding:7px 14px; font-size:.9rem}
-:focus-visible{outline:3px solid var(--rain); outline-offset:2px}
-.modes{margin-bottom:12px}
+/* charts */
 .seg{display:inline-flex; flex-wrap:wrap; gap:6px}
 .seg button{padding:8px 14px; font-size:.95rem}
-.seg.small button{padding:6px 12px; font-size:.9rem}
 .seg button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--bg); font-weight:600}
-
-/* chart */
+.modes{margin-bottom:12px}
 .card{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:16px 12px 12px}
 .readout{padding:0 8px 6px; min-height:3.7rem}
 .readout .big{font-size:1.75rem; font-weight:800; letter-spacing:-.02em; line-height:1.15}
@@ -111,7 +170,7 @@ button{
 .grid{stroke:var(--line); stroke-width:1}
 .axis{fill:var(--muted); font-size:12px; font-family:inherit}
 .axis.mid{font-size:15px}
-.bar{fill:var(--rain); opacity:.28}
+.bar1{fill:var(--rain); opacity:.28}
 .nbar{fill:var(--rain); opacity:.55}
 .nbar.on{opacity:1}
 .line{fill:none; stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round}
@@ -122,7 +181,7 @@ button{
 .dot.rain{fill:var(--rain)} .dot.temp{fill:var(--warm)} .dot.wind{fill:var(--wind)}
 .legend{color:var(--muted); font-size:.85rem; padding:6px 8px 0; margin:0}
 
-/* weather icons */
+/* icons */
 .wi{display:block; flex:none}
 .wi .s circle{fill:var(--sun)}
 .wi .s line{stroke:var(--sun); stroke-width:3; stroke-linecap:round}
@@ -131,9 +190,10 @@ button{
 .wi .n{fill:var(--snow)}
 .wi .b{fill:var(--sun)}
 .wi .f{stroke:var(--cloud); stroke-width:3; stroke-linecap:round}
+.wi .m{fill:var(--moon)}
 
-/* 7 days */
-h2{font-size:1.2rem; margin:34px 0 4px; letter-spacing:-.01em}
+/* week */
+h2{font-size:1.2rem; margin:6px 0 4px; letter-spacing:-.01em}
 .days{list-style:none; margin:0; padding:0}
 .days li{
   display:grid; grid-template-columns:40px minmax(0,1fr) 64px 72px; align-items:center; gap:12px;
@@ -146,646 +206,1328 @@ h2{font-size:1.2rem; margin:34px 0 4px; letter-spacing:-.01em}
 .dr .p{color:var(--muted); font-size:.85rem; font-variant-numeric:tabular-nums}
 .track{display:block; height:6px; border-radius:999px; background:var(--line); overflow:hidden}
 .fill{display:block; height:100%; background:var(--rain); border-radius:999px}
-.days .t{text-align:right; font-variant-numeric:tabular-nums; font-weight:600}
+.days .t{text-align:end; font-variant-numeric:tabular-nums; font-weight:600}
 .days .t span{color:var(--muted); font-weight:400}
-.foot{color:var(--muted); font-size:.8rem; margin:28px 0 0}
+
+/* places */
+.search{display:flex; gap:8px; margin:6px 0 8px}
+input,select{
+  font:inherit; color:var(--ink); background:var(--field); border:1px solid var(--line);
+}
+.search input{flex:1; min-width:0; border-radius:999px; padding:10px 16px}
+.search button{background:var(--ink); color:var(--bg); border-color:var(--ink); font-weight:600}
+.ghost{padding:8px 14px; font-size:.92rem}
+.plist{list-style:none; margin:0; padding:0}
+.plist li{display:flex; align-items:center; gap:6px; border-bottom:1px solid var(--line)}
+.plist .pn{
+  flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; text-align:start;
+  border:0; border-radius:0; padding:14px 0; font-weight:600; background:none;
+}
+.plist .pn small{color:var(--rain); font-weight:400; font-size:.8rem}
+.plist .x{border:0; padding:6px 12px; font-size:1.4rem; line-height:1; color:var(--muted)}
+.plist .empty{color:var(--muted); padding:14px 0}
+
+/* settings */
+.srow{padding:12px 0; border-bottom:1px solid var(--line)}
+.srow.inline{display:flex; align-items:center; justify-content:space-between; gap:14px}
+.sl{display:block; margin-bottom:8px; font-weight:600}
+.srow.inline .sl{margin:0}
+.srow select{width:100%; border-radius:12px; padding:11px 12px}
+.snote{color:var(--muted); font-size:.85rem; margin:6px 0 0}
+.sw{
+  flex:none; display:flex; width:50px; height:30px; padding:3px; border-radius:999px;
+  background:var(--line); border:0; justify-content:flex-start; align-items:center;
+}
+.sw i{display:block; width:24px; height:24px; border-radius:50%; background:#fff}
+.sw[aria-checked="true"]{background:var(--rain); justify-content:flex-end}
+.sbtn{margin:14px 10px 0 0}
+.about{color:var(--muted); font-size:.85rem; margin:20px 0 0}
 </style>
 </head>
 <body>
-<main>
-  <header class="top">
-    <div>
-      <h1 class="place">
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
-        <span id="place"></span>
-      </h1>
-      <p class="date" id="date"></p>
+<div class="app">
+  <header class="bar"><div class="wrap">
+    <div class="top">
+      <div>
+        <h1 class="place">
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+          <span id="place"></span>
+        </h1>
+        <p class="date" id="date"></p>
+        <p class="status" id="status" role="status"></p>
+      </div>
+      <div class="acts">
+        <button class="iconbtn star" id="star" type="button" aria-pressed="false" data-i18n-aria="save_place">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8z"/></svg>
+        </button>
+        <button class="iconbtn" id="refresh" type="button" data-i18n-aria="refresh">
+          <svg id="refreshIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
     </div>
-    <div class="seg small" id="units" role="group" aria-label="Units">
-      <button type="button" data-units="metric" aria-label="Metric" aria-pressed="true">°C</button>
-      <button type="button" data-units="imperial" aria-label="Imperial" aria-pressed="false">°F</button>
-    </div>
-  </header>
-  <p class="status" id="status" role="status"></p>
-  <button class="ghost change" id="change" type="button" aria-expanded="false">Change location</button>
+    <nav class="tabs" id="tabs" role="tablist">
+      <button class="tab" type="button" role="tab" data-tab="0" data-i18n="tab_today"></button>
+      <button class="tab" type="button" role="tab" data-tab="1" data-i18n="tab_charts"></button>
+      <button class="tab" type="button" role="tab" data-tab="2" data-i18n="tab_week"></button>
+      <button class="tab" type="button" role="tab" data-tab="3" data-i18n="tab_places"></button>
+      <button class="tab" type="button" role="tab" data-tab="4" data-i18n="tab_settings"></button>
+      <span class="ind" id="ind"></span>
+    </nav>
+  </div></header>
 
-  <section class="panel" id="panel" hidden>
-    <div class="search">
-      <input id="city" type="text" placeholder="Search a city" aria-label="Search a city" autocomplete="off">
-      <button id="go" type="button">Search</button>
-    </div>
-    <button class="ghost" id="locate" type="button">Use my location</button>
-  </section>
-
-  <section class="hero">
-    <div id="hicon"></div>
-    <div>
-      <div class="htemp" id="htemp"></div>
-      <div class="hlabel" id="hlabel"></div>
-    </div>
-  </section>
-  <p class="tip" id="tip"></p>
-
-  <h2 class="summary" id="summary"></h2>
-  <p class="sub" id="sub"></p>
-
-  <dl class="stats">
-    <div><dt>Feels like</dt><dd id="sFeels"></dd></div>
-    <div><dt>Wind</dt><dd id="sWind"></dd></div>
-    <div><dt>Rain next 24h</dt><dd id="sRain"></dd></div>
-  </dl>
-
-  <div class="seg modes" id="modes" role="group" aria-label="Chart type">
-    <button type="button" data-mode="rain" aria-pressed="true">Rain</button>
-    <button type="button" data-mode="now" aria-pressed="false">Next 2 hours</button>
-    <button type="button" data-mode="temp" aria-pressed="false">Temperature</button>
-    <button type="button" data-mode="wind" aria-pressed="false">Wind</button>
+  <div class="banner" id="banner" hidden>
+    <span id="bannerText"></span>
+    <button type="button" id="bannerClose" data-i18n-aria="banner_close">×</button>
   </div>
 
-  <div class="card">
-    <div class="readout" id="readout" aria-live="polite"></div>
-    <svg id="chart" viewBox="0 0 640 300" role="img" aria-label="Forecast chart"></svg>
-    <p class="legend" id="legend"></p>
-  </div>
+  <main class="pager" id="pager">
+    <section class="pane" id="pane0" role="tabpanel"><div class="in">
+      <div class="hero">
+        <div id="hicon"></div>
+        <div><div class="htemp" id="htemp"></div><div class="hlabel" id="hlabel"></div></div>
+      </div>
+      <p class="tip" id="tip"></p>
+      <h2 class="summary" id="summary"></h2>
+      <p class="sub" id="sub"></p>
+      <dl class="stats">
+        <div><dt data-i18n="lb_feels"></dt><dd id="sFeels"></dd></div>
+        <div><dt data-i18n="lb_wind"></dt><dd id="sWind"></dd></div>
+        <div><dt data-i18n="lb_rain24"></dt><dd id="sRain"></dd></div>
+      </dl>
+      <div class="dry" id="dry"></div>
+      <h3 class="sec" data-i18n="hourly_title"></h3>
+      <div class="strip" id="strip"></div>
+      <h3 class="sec" data-i18n="details_title"></h3>
+      <dl class="details" id="details"></dl>
+    </div></section>
 
-  <h2>Next 7 days</h2>
-  <ul class="days" id="days"></ul>
+    <section class="pane" id="pane1" role="tabpanel"><div class="in">
+      <div class="seg modes" id="modes" role="group">
+        <button type="button" data-mode="rain" aria-pressed="true" data-i18n="m_rain"></button>
+        <button type="button" data-mode="now" aria-pressed="false" data-i18n="m_now"></button>
+        <button type="button" data-mode="temp" aria-pressed="false" data-i18n="m_temp"></button>
+        <button type="button" data-mode="wind" aria-pressed="false" data-i18n="m_wind"></button>
+      </div>
+      <div class="card">
+        <div class="readout" id="readout" aria-live="polite"></div>
+        <svg id="chart" viewBox="0 0 640 300" role="img" aria-label="Forecast chart"></svg>
+        <p class="legend" id="legend"></p>
+      </div>
+    </div></section>
 
-  <p class="foot">Forecast data from <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>. Place names from BigDataCloud.</p>
-</main>
+    <section class="pane" id="pane2" role="tabpanel"><div class="in">
+      <h2 data-i18n="wk_title"></h2>
+      <ul class="days" id="days"></ul>
+    </div></section>
+
+    <section class="pane" id="pane3" role="tabpanel"><div class="in">
+      <div class="search">
+        <input id="city" type="text" data-i18n-ph="pl_search" aria-label="Search" autocomplete="off">
+        <button id="go" type="button" data-i18n="pl_btn"></button>
+      </div>
+      <button class="ghost" id="locate" type="button" data-i18n="pl_loc"></button>
+      <div id="results"></div>
+      <h3 class="sec" data-i18n="pl_saved"></h3>
+      <ul class="plist" id="plist"></ul>
+    </div></section>
+
+    <section class="pane" id="pane4" role="tabpanel"><div class="in">
+      <h2 data-i18n="se_title"></h2>
+      <div id="settings"></div>
+    </div></section>
+  </main>
+</div>
 
 <script>
 (function(){
-  var W=640,H=300,L=44,R=14,T=14,B=30,PW=W-L-R,PH=H-T-B;
-  var FAIL='Live weather cannot load right now, so you are seeing sample data.';
-  var state={mode:'rain',units:'metric',data:null,now:null,place:'Sample forecast',live:false};
-  var cur=null,loadedAt=0;
+var I18N={
+en:{
+tab_today:"Today",tab_charts:"Charts",tab_week:"Week",tab_places:"Places",tab_settings:"Settings",
+sample_place:"Sample forecast",save_place:"Save this place",unsave_place:"Remove from saved places",refresh:"Refresh",
+st_loading:"Loading {name}...",st_updated:"Updated at {t}.",st_finding:"Finding your location...",st_loadfc:"Loading forecast...",st_locoff:"Location is turned off for this page. Search a city instead.",st_nogeo:"This browser cannot share your location. Search a city instead.",st_lookup:"Looking up {q}...",st_notfound:"No place found for {q}. Check the spelling.",st_fail:"Live weather cannot load right now, so you are seeing sample data.",st_failrefresh:"Could not refresh. Showing the last forecast.",st_sample:"Showing sample data. Search a city or use your location.",
+w_sunny:"Sunny",w_mostlysunny:"Mostly sunny",w_clear:"Clear",w_mostlyclear:"Mostly clear",w_partly:"Partly cloudy",w_cloudy:"Cloudy",w_fog:"Foggy",w_drizzle:"Drizzle",w_rain:"Rainy",w_showers:"Showers",w_snow:"Snowy",w_storm:"Thunderstorm",
+tip_rain:"Rain today. Take an umbrella.",tip_storm:"Thunderstorms today. Stay safe indoors.",tip_snow:"Snow today. Dress warm.",tip_sun:"A sunny day. Sunglasses on.",
+sum_none:"No rain expected in the next 24 hours.",sum_high:"The highest chance is {p}% around {t}.",sum_now:"Raining now, easing around {t}.",sum_range:"Rain likely from {a} to {b}.",sum_heavy:"Heaviest around {t} at {v} {u} per hour.",sum_light:"Mostly light showers.",
+lb_feels:"Feels like",lb_wind:"Wind",lb_rain24:"Rain next 24h",lb_humidity:"Humidity",lb_uv:"UV index",lb_sunrise:"Sunrise",lb_sunset:"Sunset",
+uv_low:"Low",uv_mod:"Moderate",uv_high:"High",uv_vhigh:"Very high",uv_ext:"Extreme",
+dry_title:"Best dry window",dry_none:"No long dry spell in the next 24 hours",dry_all:"Dry for the next 24 hours",hourly_title:"Next hours",details_title:"Details",
+m_rain:"Rain",m_now:"Next 2 hours",m_temp:"Temperature",m_wind:"Wind",
+r_chance:"{p}% chance of rain",r_perhour:"{v} {u} per hour",r_now:"Now",r_feels:"Feels like {v}",r_wind:"{v} {u} wind",
+n_none:"No 2-hour forecast here",n_na:"Not available",n_couldnot:"The 2-hour rain forecast could not be loaded.",n_dry:"Dry for the next 2 hours",n_dryuntil:"No rain expected until {t}.",n_rainingnow:"Raining now",n_continues:"Rain continues for the next 2 hours.",n_stops:"Stops in about {d}.",n_starts:"Rain starts in {d}",n_around:"Around {t} · {c}.",n_norain:"No rain expected",
+c_dry:"Dry",c_light:"Light rain",c_moderate:"Moderate rain",c_heavy:"Heavy rain",c_vheavy:"Very heavy rain",
+lg_rain:"Line shows the chance of rain. Bars show how much falls per hour. Drag across the chart to check any hour.",lg_temp:"Solid line is the temperature. Dotted line is how it feels. Drag across the chart to check any hour.",lg_wind:"Line shows wind speed in {u}. Drag across the chart to check any hour.",lg_radar:"Rain radar in 5-minute steps from {link}.",lg_sample:"Sample data in 5-minute steps.",lg_om:"Forecast in 15-minute steps. Rain radar in 5-minute steps is only available in the Netherlands and nearby areas.",lg_bars:"Bars show rain intensity ({u} per hour). Drag across the chart to check a moment.",
+d_min:"min",d_h:"h",
+wk_title:"Next 7 days",wk_today:"Today",wk_rain:"{p}% rain",
+pl_title:"Places",pl_search:"Search a city",pl_btn:"Search",pl_loc:"Use my location",pl_saved:"Saved places",pl_empty:"No saved places yet. Search a city and tap it to save it.",pl_results:"Search results",pl_remove:"Remove",pl_current:"Showing now",pl_noresults:"No places found.",
+se_title:"Settings",se_appearance:"Appearance",se_language:"Language",se_theme:"Theme",th_auto:"Auto",th_light:"Light",th_dark:"Dark",se_sky:"Weather colors in the background",se_units:"Units",se_temp:"Temperature",se_windu:"Wind speed",se_rainu:"Rain",se_time:"Time format",se_general:"General",se_start:"Start screen",se_refresh:"Refresh every",se_alerts:"Alerts",se_alerts_on:"Rain alerts",se_a_start:"Rain is about to start",se_a_stop:"Rain is about to stop",se_a_dry:"It is dry again",se_a_storm:"Thunderstorm warning",se_lead:"Warn me before",se_phone:"Phone notifications",ph_off:"Off",ph_on:"On",ph_denied:"Blocked in iPhone settings",ph_nosupport:"Not available in this browser. Add the app to your Home Screen first.",se_test:"Send a test alert",se_about:"About",se_reset:"Reset settings",al_note:"Alerts show up while the app is open. iPhone pauses apps in the background, so pings while the app is closed need extra setup.",
+al_start_t:"Rain soon",al_start_b:"Rain starts in {d}.",al_stop_t:"Rain stopping",al_stop_b:"Rain stops in about {d}.",al_dry_t:"It is dry again",al_dry_b:"The rain has stopped.",al_storm_t:"Thunderstorm warning",al_storm_b:"Thunderstorms are expected today.",al_test_t:"Test alert",al_test_b:"Alerts are working.",banner_close:"Close",
+foot:"Forecast data from {a}. Place names from BigDataCloud."
+},
+nl:{
+tab_today:"Vandaag",tab_charts:"Grafieken",tab_week:"Week",tab_places:"Plaatsen",tab_settings:"Instellingen",
+sample_place:"Voorbeeldweer",save_place:"Deze plaats bewaren",unsave_place:"Verwijderen uit bewaarde plaatsen",refresh:"Vernieuwen",
+st_loading:"{name} laden...",st_updated:"Bijgewerkt om {t}.",st_finding:"Je locatie zoeken...",st_loadfc:"Verwachting laden...",st_locoff:"Locatie staat uit voor deze pagina. Zoek in plaats daarvan een stad.",st_nogeo:"Deze browser kan je locatie niet delen. Zoek in plaats daarvan een stad.",st_lookup:"{q} opzoeken...",st_notfound:"Geen plaats gevonden voor {q}. Controleer de spelling.",st_fail:"Actueel weer kan nu niet laden, je ziet voorbeeldgegevens.",st_failrefresh:"Vernieuwen mislukt. De laatste verwachting wordt getoond.",st_sample:"Voorbeeldgegevens worden getoond. Zoek een stad of gebruik je locatie.",
+w_sunny:"Zonnig",w_mostlysunny:"Overwegend zonnig",w_clear:"Helder",w_mostlyclear:"Overwegend helder",w_partly:"Half bewolkt",w_cloudy:"Bewolkt",w_fog:"Mistig",w_drizzle:"Motregen",w_rain:"Regenachtig",w_showers:"Buien",w_snow:"Sneeuw",w_storm:"Onweer",
+tip_rain:"Vandaag regen. Neem een paraplu mee.",tip_storm:"Vandaag onweer. Blijf veilig binnen.",tip_snow:"Vandaag sneeuw. Kleed je warm aan.",tip_sun:"Een zonnige dag. Zonnebril op.",
+sum_none:"Geen regen verwacht in de komende 24 uur.",sum_high:"De grootste kans is {p}% rond {t}.",sum_now:"Het regent nu, rond {t} wordt het rustiger.",sum_range:"Waarschijnlijk regen van {a} tot {b}.",sum_heavy:"Het zwaarst rond {t} met {v} {u} per uur.",sum_light:"Vooral lichte buien.",
+lb_feels:"Voelt als",lb_wind:"Wind",lb_rain24:"Regen komende 24 u",lb_humidity:"Luchtvochtigheid",lb_uv:"UV-index",lb_sunrise:"Zonsopkomst",lb_sunset:"Zonsondergang",
+uv_low:"Laag",uv_mod:"Matig",uv_high:"Hoog",uv_vhigh:"Zeer hoog",uv_ext:"Extreem",
+dry_title:"Beste droge periode",dry_none:"Geen lange droge periode in de komende 24 uur",dry_all:"Droog in de komende 24 uur",hourly_title:"Komende uren",details_title:"Details",
+m_rain:"Regen",m_now:"Komende 2 uur",m_temp:"Temperatuur",m_wind:"Wind",
+r_chance:"{p}% kans op regen",r_perhour:"{v} {u} per uur",r_now:"Nu",r_feels:"Voelt als {v}",r_wind:"{v} {u} wind",
+n_none:"Hier geen verwachting voor 2 uur",n_na:"Niet beschikbaar",n_couldnot:"De regenverwachting voor 2 uur kon niet worden geladen.",n_dry:"Droog de komende 2 uur",n_dryuntil:"Geen regen verwacht tot {t}.",n_rainingnow:"Het regent nu",n_continues:"De regen houdt de komende 2 uur aan.",n_stops:"Stopt over ongeveer {d}.",n_starts:"Regen begint over {d}",n_around:"Rond {t} · {c}.",n_norain:"Geen regen verwacht",
+c_dry:"Droog",c_light:"Lichte regen",c_moderate:"Matige regen",c_heavy:"Zware regen",c_vheavy:"Zeer zware regen",
+lg_rain:"De lijn toont de kans op regen. De balken tonen hoeveel er per uur valt. Sleep over de grafiek om elk uur te bekijken.",lg_temp:"De ononderbroken lijn is de temperatuur. De gestippelde lijn is hoe het aanvoelt. Sleep over de grafiek om elk uur te bekijken.",lg_wind:"De lijn toont de windsnelheid in {u}. Sleep over de grafiek om elk uur te bekijken.",lg_radar:"Regenradar in stappen van 5 minuten van {link}.",lg_sample:"Voorbeeldgegevens in stappen van 5 minuten.",lg_om:"Verwachting in stappen van 15 minuten. Regenradar met stappen van 5 minuten is alleen beschikbaar in Nederland en omgeving.",lg_bars:"De balken tonen de regenintensiteit ({u} per uur). Sleep over de grafiek om een moment te bekijken.",
+d_min:"min",d_h:"u",
+wk_title:"Komende 7 dagen",wk_today:"Vandaag",wk_rain:"{p}% regen",
+pl_title:"Plaatsen",pl_search:"Zoek een stad",pl_btn:"Zoeken",pl_loc:"Mijn locatie gebruiken",pl_saved:"Bewaarde plaatsen",pl_empty:"Nog geen bewaarde plaatsen. Zoek een stad en tik erop om die te bewaren.",pl_results:"Zoekresultaten",pl_remove:"Verwijderen",pl_current:"Nu getoond",pl_noresults:"Geen plaatsen gevonden.",
+se_title:"Instellingen",se_appearance:"Weergave",se_language:"Taal",se_theme:"Thema",th_auto:"Automatisch",th_light:"Licht",th_dark:"Donker",se_sky:"Weerkleuren op de achtergrond",se_units:"Eenheden",se_temp:"Temperatuur",se_windu:"Windsnelheid",se_rainu:"Regen",se_time:"Tijdnotatie",se_general:"Algemeen",se_start:"Startscherm",se_refresh:"Vernieuwen elke",se_alerts:"Meldingen",se_alerts_on:"Regenmeldingen",se_a_start:"Regen begint zo",se_a_stop:"Regen stopt zo",se_a_dry:"Het is weer droog",se_a_storm:"Onweerswaarschuwing",se_lead:"Waarschuw me van tevoren",se_phone:"Telefoonmeldingen",ph_off:"Uit",ph_on:"Aan",ph_denied:"Geblokkeerd in de iPhone-instellingen",ph_nosupport:"Niet beschikbaar in deze browser. Zet de app eerst op je beginscherm.",se_test:"Testmelding sturen",se_about:"Over",se_reset:"Instellingen herstellen",al_note:"Meldingen verschijnen terwijl de app open is. iPhone pauzeert apps op de achtergrond, dus meldingen bij een gesloten app vragen extra installatie.",
+al_start_t:"Regen komt eraan",al_start_b:"Regen begint over {d}.",al_stop_t:"Regen stopt bijna",al_stop_b:"Regen stopt over ongeveer {d}.",al_dry_t:"Het is weer droog",al_dry_b:"De regen is gestopt.",al_storm_t:"Onweerswaarschuwing",al_storm_b:"Vandaag wordt onweer verwacht.",al_test_t:"Testmelding",al_test_b:"Meldingen werken.",banner_close:"Sluiten",
+foot:"Weergegevens van {a}. Plaatsnamen van BigDataCloud."
+},
+es:{
+tab_today:"Hoy",tab_charts:"Gráficos",tab_week:"Semana",tab_places:"Lugares",tab_settings:"Ajustes",
+sample_place:"Pronóstico de ejemplo",save_place:"Guardar este lugar",unsave_place:"Quitar de lugares guardados",refresh:"Actualizar",
+st_loading:"Cargando {name}...",st_updated:"Actualizado a las {t}.",st_finding:"Buscando tu ubicación...",st_loadfc:"Cargando pronóstico...",st_locoff:"La ubicación está desactivada para esta página. Busca una ciudad.",st_nogeo:"Este navegador no puede compartir tu ubicación. Busca una ciudad.",st_lookup:"Buscando {q}...",st_notfound:"No se encontró ningún lugar para {q}. Revisa la ortografía.",st_fail:"El tiempo en directo no se puede cargar ahora, así que ves datos de ejemplo.",st_failrefresh:"No se pudo actualizar. Se muestra el último pronóstico.",st_sample:"Se muestran datos de ejemplo. Busca una ciudad o usa tu ubicación.",
+w_sunny:"Soleado",w_mostlysunny:"Mayormente soleado",w_clear:"Despejado",w_mostlyclear:"Mayormente despejado",w_partly:"Parcialmente nublado",w_cloudy:"Nublado",w_fog:"Niebla",w_drizzle:"Llovizna",w_rain:"Lluvioso",w_showers:"Chubascos",w_snow:"Nieve",w_storm:"Tormenta",
+tip_rain:"Lluvia hoy. Lleva un paraguas.",tip_storm:"Tormentas hoy. Mantente a salvo en interiores.",tip_snow:"Nieve hoy. Abrígate.",tip_sun:"Un día soleado. Ponte las gafas de sol.",
+sum_none:"No se espera lluvia en las próximas 24 horas.",sum_high:"La mayor probabilidad es {p}% sobre las {t}.",sum_now:"Llueve ahora, amainará hacia las {t}.",sum_range:"Probable lluvia de {a} a {b}.",sum_heavy:"Lo más fuerte sobre las {t}, con {v} {u} por hora.",sum_light:"Sobre todo chubascos ligeros.",
+lb_feels:"Sensación",lb_wind:"Viento",lb_rain24:"Lluvia próximas 24 h",lb_humidity:"Humedad",lb_uv:"Índice UV",lb_sunrise:"Amanecer",lb_sunset:"Atardecer",
+uv_low:"Bajo",uv_mod:"Moderado",uv_high:"Alto",uv_vhigh:"Muy alto",uv_ext:"Extremo",
+dry_title:"Mejor momento seco",dry_none:"Sin un periodo seco largo en las próximas 24 horas",dry_all:"Seco durante las próximas 24 horas",hourly_title:"Próximas horas",details_title:"Detalles",
+m_rain:"Lluvia",m_now:"Próximas 2 horas",m_temp:"Temperatura",m_wind:"Viento",
+r_chance:"{p}% de probabilidad de lluvia",r_perhour:"{v} {u} por hora",r_now:"Ahora",r_feels:"Sensación de {v}",r_wind:"Viento de {v} {u}",
+n_none:"Sin pronóstico de 2 horas aquí",n_na:"No disponible",n_couldnot:"No se pudo cargar el pronóstico de lluvia de 2 horas.",n_dry:"Seco las próximas 2 horas",n_dryuntil:"No se espera lluvia hasta las {t}.",n_rainingnow:"Llueve ahora",n_continues:"La lluvia continúa durante las próximas 2 horas.",n_stops:"Para en unos {d}.",n_starts:"La lluvia empieza en {d}",n_around:"Sobre las {t} · {c}.",n_norain:"No se espera lluvia",
+c_dry:"Seco",c_light:"Lluvia ligera",c_moderate:"Lluvia moderada",c_heavy:"Lluvia fuerte",c_vheavy:"Lluvia muy fuerte",
+lg_rain:"La línea muestra la probabilidad de lluvia. Las barras muestran cuánto cae por hora. Arrastra por el gráfico para ver cualquier hora.",lg_temp:"La línea continua es la temperatura. La línea de puntos es la sensación térmica. Arrastra por el gráfico para ver cualquier hora.",lg_wind:"La línea muestra la velocidad del viento en {u}. Arrastra por el gráfico para ver cualquier hora.",lg_radar:"Radar de lluvia en pasos de 5 minutos de {link}.",lg_sample:"Datos de ejemplo en pasos de 5 minutos.",lg_om:"Pronóstico en pasos de 15 minutos. El radar de lluvia en pasos de 5 minutos solo está disponible en los Países Bajos y zonas cercanas.",lg_bars:"Las barras muestran la intensidad de lluvia ({u} por hora). Arrastra por el gráfico para ver un momento.",
+d_min:"min",d_h:"h",
+wk_title:"Próximos 7 días",wk_today:"Hoy",wk_rain:"{p}% lluvia",
+pl_title:"Lugares",pl_search:"Buscar una ciudad",pl_btn:"Buscar",pl_loc:"Usar mi ubicación",pl_saved:"Lugares guardados",pl_empty:"Aún no hay lugares guardados. Busca una ciudad y tócala para guardarla.",pl_results:"Resultados",pl_remove:"Quitar",pl_current:"Mostrando ahora",pl_noresults:"No se encontraron lugares.",
+se_title:"Ajustes",se_appearance:"Apariencia",se_language:"Idioma",se_theme:"Tema",th_auto:"Automático",th_light:"Claro",th_dark:"Oscuro",se_sky:"Colores del tiempo en el fondo",se_units:"Unidades",se_temp:"Temperatura",se_windu:"Velocidad del viento",se_rainu:"Lluvia",se_time:"Formato de hora",se_general:"General",se_start:"Pantalla de inicio",se_refresh:"Actualizar cada",se_alerts:"Avisos",se_alerts_on:"Avisos de lluvia",se_a_start:"Va a empezar a llover",se_a_stop:"Va a dejar de llover",se_a_dry:"Vuelve a estar seco",se_a_storm:"Aviso de tormenta",se_lead:"Avisarme con antelación",se_phone:"Notificaciones del teléfono",ph_off:"Desactivadas",ph_on:"Activadas",ph_denied:"Bloqueadas en los ajustes del iPhone",ph_nosupport:"No disponible en este navegador. Añade primero la app a tu pantalla de inicio.",se_test:"Enviar aviso de prueba",se_about:"Acerca de",se_reset:"Restablecer ajustes",al_note:"Los avisos aparecen mientras la app está abierta. El iPhone pausa las apps en segundo plano, así que recibir avisos con la app cerrada requiere una configuración adicional.",
+al_start_t:"Lluvia pronto",al_start_b:"La lluvia empieza en {d}.",al_stop_t:"La lluvia termina",al_stop_b:"La lluvia para en unos {d}.",al_dry_t:"Vuelve a estar seco",al_dry_b:"Ha dejado de llover.",al_storm_t:"Aviso de tormenta",al_storm_b:"Se esperan tormentas hoy.",al_test_t:"Aviso de prueba",al_test_b:"Los avisos funcionan.",banner_close:"Cerrar",
+foot:"Datos del tiempo de {a}. Nombres de lugares de BigDataCloud."
+},
+fr:{
+tab_today:"Aujourd’hui",tab_charts:"Graphiques",tab_week:"Semaine",tab_places:"Lieux",tab_settings:"Réglages",
+sample_place:"Prévisions d’exemple",save_place:"Enregistrer ce lieu",unsave_place:"Retirer des lieux enregistrés",refresh:"Actualiser",
+st_loading:"Chargement de {name}...",st_updated:"Mis à jour à {t}.",st_finding:"Recherche de votre position...",st_loadfc:"Chargement des prévisions...",st_locoff:"La localisation est désactivée pour cette page. Cherchez plutôt une ville.",st_nogeo:"Ce navigateur ne peut pas partager votre position. Cherchez plutôt une ville.",st_lookup:"Recherche de {q}...",st_notfound:"Aucun lieu trouvé pour {q}. Vérifiez l’orthographe.",st_fail:"La météo en direct ne peut pas se charger pour l’instant, vous voyez donc des données d’exemple.",st_failrefresh:"Actualisation impossible. Dernières prévisions affichées.",st_sample:"Données d’exemple affichées. Cherchez une ville ou utilisez votre position.",
+w_sunny:"Ensoleillé",w_mostlysunny:"Plutôt ensoleillé",w_clear:"Dégagé",w_mostlyclear:"Plutôt dégagé",w_partly:"Partiellement nuageux",w_cloudy:"Nuageux",w_fog:"Brouillard",w_drizzle:"Bruine",w_rain:"Pluvieux",w_showers:"Averses",w_snow:"Neige",w_storm:"Orage",
+tip_rain:"Pluie aujourd’hui. Prenez un parapluie.",tip_storm:"Orages aujourd’hui. Restez à l’abri.",tip_snow:"Neige aujourd’hui. Habillez-vous chaudement.",tip_sun:"Une journée ensoleillée. Sortez les lunettes de soleil.",
+sum_none:"Pas de pluie prévue dans les 24 prochaines heures.",sum_high:"La probabilité la plus élevée est de {p}% vers {t}.",sum_now:"Il pleut en ce moment, ça se calme vers {t}.",sum_range:"Pluie probable de {a} à {b}.",sum_heavy:"Le plus fort vers {t}, avec {v} {u} par heure.",sum_light:"Surtout des averses légères.",
+lb_feels:"Ressenti",lb_wind:"Vent",lb_rain24:"Pluie 24 h à venir",lb_humidity:"Humidité",lb_uv:"Indice UV",lb_sunrise:"Lever du soleil",lb_sunset:"Coucher du soleil",
+uv_low:"Faible",uv_mod:"Modéré",uv_high:"Élevé",uv_vhigh:"Très élevé",uv_ext:"Extrême",
+dry_title:"Meilleure fenêtre au sec",dry_none:"Pas de longue période sèche dans les 24 prochaines heures",dry_all:"Sec pendant les 24 prochaines heures",hourly_title:"Prochaines heures",details_title:"Détails",
+m_rain:"Pluie",m_now:"2 prochaines heures",m_temp:"Température",m_wind:"Vent",
+r_chance:"{p}% de risque de pluie",r_perhour:"{v} {u} par heure",r_now:"Maintenant",r_feels:"Ressenti {v}",r_wind:"Vent de {v} {u}",
+n_none:"Pas de prévision sur 2 heures ici",n_na:"Indisponible",n_couldnot:"Les prévisions de pluie sur 2 heures n’ont pas pu être chargées.",n_dry:"Sec pendant les 2 prochaines heures",n_dryuntil:"Pas de pluie prévue avant {t}.",n_rainingnow:"Il pleut",n_continues:"La pluie continue pendant les 2 prochaines heures.",n_stops:"S’arrête dans environ {d}.",n_starts:"La pluie commence dans {d}",n_around:"Vers {t} · {c}.",n_norain:"Pas de pluie prévue",
+c_dry:"Sec",c_light:"Pluie faible",c_moderate:"Pluie modérée",c_heavy:"Forte pluie",c_vheavy:"Très forte pluie",
+lg_rain:"La ligne montre le risque de pluie. Les barres montrent la quantité par heure. Faites glisser sur le graphique pour voir chaque heure.",lg_temp:"La ligne pleine est la température. La ligne pointillée est le ressenti. Faites glisser sur le graphique pour voir chaque heure.",lg_wind:"La ligne montre la vitesse du vent en {u}. Faites glisser sur le graphique pour voir chaque heure.",lg_radar:"Radar de pluie par pas de 5 minutes de {link}.",lg_sample:"Données d’exemple par pas de 5 minutes.",lg_om:"Prévisions par pas de 15 minutes. Le radar de pluie par pas de 5 minutes n’est disponible qu’aux Pays-Bas et dans les zones voisines.",lg_bars:"Les barres montrent l’intensité de la pluie ({u} par heure). Faites glisser sur le graphique pour voir un instant.",
+d_min:"min",d_h:"h",
+wk_title:"7 prochains jours",wk_today:"Aujourd’hui",wk_rain:"{p}% de pluie",
+pl_title:"Lieux",pl_search:"Chercher une ville",pl_btn:"Chercher",pl_loc:"Utiliser ma position",pl_saved:"Lieux enregistrés",pl_empty:"Aucun lieu enregistré. Cherchez une ville et touchez-la pour l’enregistrer.",pl_results:"Résultats",pl_remove:"Retirer",pl_current:"Affiché actuellement",pl_noresults:"Aucun lieu trouvé.",
+se_title:"Réglages",se_appearance:"Apparence",se_language:"Langue",se_theme:"Thème",th_auto:"Auto",th_light:"Clair",th_dark:"Sombre",se_sky:"Couleurs météo en arrière-plan",se_units:"Unités",se_temp:"Température",se_windu:"Vitesse du vent",se_rainu:"Pluie",se_time:"Format de l’heure",se_general:"Général",se_start:"Écran de démarrage",se_refresh:"Actualiser toutes les",se_alerts:"Alertes",se_alerts_on:"Alertes de pluie",se_a_start:"La pluie va commencer",se_a_stop:"La pluie va s’arrêter",se_a_dry:"Il fait de nouveau sec",se_a_storm:"Alerte orage",se_lead:"Me prévenir à l’avance",se_phone:"Notifications du téléphone",ph_off:"Désactivées",ph_on:"Activées",ph_denied:"Bloquées dans les réglages de l’iPhone",ph_nosupport:"Indisponible dans ce navigateur. Ajoutez d’abord l’app à votre écran d’accueil.",se_test:"Envoyer une alerte test",se_about:"À propos",se_reset:"Réinitialiser les réglages",al_note:"Les alertes apparaissent quand l’app est ouverte. L’iPhone met les apps en pause en arrière-plan : recevoir des alertes app fermée demande une configuration supplémentaire.",
+al_start_t:"Pluie bientôt",al_start_b:"La pluie commence dans {d}.",al_stop_t:"La pluie va s’arrêter",al_stop_b:"La pluie s’arrête dans environ {d}.",al_dry_t:"Il fait de nouveau sec",al_dry_b:"La pluie s’est arrêtée.",al_storm_t:"Alerte orage",al_storm_b:"Des orages sont prévus aujourd’hui.",al_test_t:"Alerte test",al_test_b:"Les alertes fonctionnent.",banner_close:"Fermer",
+foot:"Données météo de {a}. Noms de lieux de BigDataCloud."
+},
+de:{
+tab_today:"Heute",tab_charts:"Diagramme",tab_week:"Woche",tab_places:"Orte",tab_settings:"Einstellungen",
+sample_place:"Beispielvorhersage",save_place:"Diesen Ort speichern",unsave_place:"Aus gespeicherten Orten entfernen",refresh:"Aktualisieren",
+st_loading:"{name} wird geladen...",st_updated:"Aktualisiert um {t}.",st_finding:"Standort wird gesucht...",st_loadfc:"Vorhersage wird geladen...",st_locoff:"Der Standort ist für diese Seite ausgeschaltet. Suche stattdessen eine Stadt.",st_nogeo:"Dieser Browser kann deinen Standort nicht teilen. Suche stattdessen eine Stadt.",st_lookup:"{q} wird gesucht...",st_notfound:"Kein Ort für {q} gefunden. Prüfe die Schreibweise.",st_fail:"Das aktuelle Wetter kann gerade nicht geladen werden, deshalb siehst du Beispieldaten.",st_failrefresh:"Aktualisierung fehlgeschlagen. Die letzte Vorhersage wird angezeigt.",st_sample:"Beispieldaten werden angezeigt. Suche eine Stadt oder nutze deinen Standort.",
+w_sunny:"Sonnig",w_mostlysunny:"Überwiegend sonnig",w_clear:"Klar",w_mostlyclear:"Überwiegend klar",w_partly:"Teils bewölkt",w_cloudy:"Bewölkt",w_fog:"Nebel",w_drizzle:"Nieselregen",w_rain:"Regnerisch",w_showers:"Schauer",w_snow:"Schnee",w_storm:"Gewitter",
+tip_rain:"Heute Regen. Nimm einen Regenschirm mit.",tip_storm:"Heute Gewitter. Bleib sicher drinnen.",tip_snow:"Heute Schnee. Zieh dich warm an.",tip_sun:"Ein sonniger Tag. Sonnenbrille auf.",
+sum_none:"In den nächsten 24 Stunden ist kein Regen zu erwarten.",sum_high:"Die höchste Wahrscheinlichkeit liegt bei {p}% gegen {t}.",sum_now:"Es regnet gerade, gegen {t} lässt es nach.",sum_range:"Wahrscheinlich Regen von {a} bis {b}.",sum_heavy:"Am stärksten gegen {t} mit {v} {u} pro Stunde.",sum_light:"Meist leichte Schauer.",
+lb_feels:"Gefühlt",lb_wind:"Wind",lb_rain24:"Regen nächste 24 Std.",lb_humidity:"Luftfeuchtigkeit",lb_uv:"UV-Index",lb_sunrise:"Sonnenaufgang",lb_sunset:"Sonnenuntergang",
+uv_low:"Niedrig",uv_mod:"Mäßig",uv_high:"Hoch",uv_vhigh:"Sehr hoch",uv_ext:"Extrem",
+dry_title:"Bestes trockenes Zeitfenster",dry_none:"Keine längere trockene Phase in den nächsten 24 Stunden",dry_all:"Trocken in den nächsten 24 Stunden",hourly_title:"Nächste Stunden",details_title:"Details",
+m_rain:"Regen",m_now:"Nächste 2 Std.",m_temp:"Temperatur",m_wind:"Wind",
+r_chance:"{p}% Regenwahrscheinlichkeit",r_perhour:"{v} {u} pro Stunde",r_now:"Jetzt",r_feels:"Gefühlt {v}",r_wind:"{v} {u} Wind",
+n_none:"Hier keine 2-Stunden-Vorhersage",n_na:"Nicht verfügbar",n_couldnot:"Die 2-Stunden-Regenvorhersage konnte nicht geladen werden.",n_dry:"Trocken in den nächsten 2 Stunden",n_dryuntil:"Kein Regen erwartet bis {t}.",n_rainingnow:"Es regnet gerade",n_continues:"Der Regen hält die nächsten 2 Stunden an.",n_stops:"Hört in etwa {d} auf.",n_starts:"Regen beginnt in {d}",n_around:"Gegen {t} · {c}.",n_norain:"Kein Regen erwartet",
+c_dry:"Trocken",c_light:"Leichter Regen",c_moderate:"Mäßiger Regen",c_heavy:"Starker Regen",c_vheavy:"Sehr starker Regen",
+lg_rain:"Die Linie zeigt die Regenwahrscheinlichkeit. Die Balken zeigen, wie viel pro Stunde fällt. Ziehe über das Diagramm, um jede Stunde zu prüfen.",lg_temp:"Die durchgezogene Linie ist die Temperatur. Die gepunktete Linie ist die gefühlte Temperatur. Ziehe über das Diagramm, um jede Stunde zu prüfen.",lg_wind:"Die Linie zeigt die Windgeschwindigkeit in {u}. Ziehe über das Diagramm, um jede Stunde zu prüfen.",lg_radar:"Regenradar in 5-Minuten-Schritten von {link}.",lg_sample:"Beispieldaten in 5-Minuten-Schritten.",lg_om:"Vorhersage in 15-Minuten-Schritten. Regenradar in 5-Minuten-Schritten gibt es nur in den Niederlanden und angrenzenden Gebieten.",lg_bars:"Die Balken zeigen die Regenintensität ({u} pro Stunde). Ziehe über das Diagramm, um einen Zeitpunkt zu prüfen.",
+d_min:"Min.",d_h:"Std.",
+wk_title:"Nächste 7 Tage",wk_today:"Heute",wk_rain:"{p}% Regen",
+pl_title:"Orte",pl_search:"Stadt suchen",pl_btn:"Suchen",pl_loc:"Meinen Standort verwenden",pl_saved:"Gespeicherte Orte",pl_empty:"Noch keine gespeicherten Orte. Suche eine Stadt und tippe darauf, um sie zu speichern.",pl_results:"Suchergebnisse",pl_remove:"Entfernen",pl_current:"Wird angezeigt",pl_noresults:"Keine Orte gefunden.",
+se_title:"Einstellungen",se_appearance:"Darstellung",se_language:"Sprache",se_theme:"Design",th_auto:"Automatisch",th_light:"Hell",th_dark:"Dunkel",se_sky:"Wetterfarben im Hintergrund",se_units:"Einheiten",se_temp:"Temperatur",se_windu:"Windgeschwindigkeit",se_rainu:"Regen",se_time:"Zeitformat",se_general:"Allgemein",se_start:"Startbildschirm",se_refresh:"Aktualisieren alle",se_alerts:"Warnungen",se_alerts_on:"Regenwarnungen",se_a_start:"Regen fängt gleich an",se_a_stop:"Regen hört gleich auf",se_a_dry:"Es ist wieder trocken",se_a_storm:"Gewitterwarnung",se_lead:"Vorwarnzeit",se_phone:"Mitteilungen auf dem Handy",ph_off:"Aus",ph_on:"An",ph_denied:"In den iPhone-Einstellungen blockiert",ph_nosupport:"In diesem Browser nicht verfügbar. Füge die App zuerst zum Home-Bildschirm hinzu.",se_test:"Testwarnung senden",se_about:"Info",se_reset:"Einstellungen zurücksetzen",al_note:"Warnungen erscheinen, solange die App geöffnet ist. Das iPhone pausiert Apps im Hintergrund, daher braucht es für Hinweise bei geschlossener App eine zusätzliche Einrichtung.",
+al_start_t:"Bald Regen",al_start_b:"Regen beginnt in {d}.",al_stop_t:"Regen hört auf",al_stop_b:"Regen hört in etwa {d} auf.",al_dry_t:"Wieder trocken",al_dry_b:"Der Regen hat aufgehört.",al_storm_t:"Gewitterwarnung",al_storm_b:"Heute sind Gewitter zu erwarten.",al_test_t:"Testwarnung",al_test_b:"Warnungen funktionieren.",banner_close:"Schließen",
+foot:"Wetterdaten von {a}. Ortsnamen von BigDataCloud."
+},
+pt:{
+tab_today:"Hoje",tab_charts:"Gráficos",tab_week:"Semana",tab_places:"Locais",tab_settings:"Configurações",
+sample_place:"Previsão de exemplo",save_place:"Salvar este local",unsave_place:"Remover dos locais salvos",refresh:"Atualizar",
+st_loading:"Carregando {name}...",st_updated:"Atualizado às {t}.",st_finding:"Procurando sua localização...",st_loadfc:"Carregando previsão...",st_locoff:"A localização está desativada para esta página. Procure uma cidade.",st_nogeo:"Este navegador não pode compartilhar sua localização. Procure uma cidade.",st_lookup:"Procurando {q}...",st_notfound:"Nenhum lugar encontrado para {q}. Verifique a ortografia.",st_fail:"O tempo ao vivo não pode ser carregado agora, então você vê dados de exemplo.",st_failrefresh:"Não foi possível atualizar. Mostrando a última previsão.",st_sample:"Mostrando dados de exemplo. Procure uma cidade ou use sua localização.",
+w_sunny:"Ensolarado",w_mostlysunny:"Predominantemente ensolarado",w_clear:"Céu limpo",w_mostlyclear:"Céu quase limpo",w_partly:"Parcialmente nublado",w_cloudy:"Nublado",w_fog:"Neblina",w_drizzle:"Garoa",w_rain:"Chuvoso",w_showers:"Pancadas de chuva",w_snow:"Neve",w_storm:"Tempestade",
+tip_rain:"Chuva hoje. Leve um guarda-chuva.",tip_storm:"Tempestades hoje. Fique em segurança em casa.",tip_snow:"Neve hoje. Agasalhe-se.",tip_sun:"Um dia ensolarado. Use óculos escuros.",
+sum_none:"Nenhuma chuva prevista nas próximas 24 horas.",sum_high:"A maior chance é de {p}% por volta das {t}.",sum_now:"Chovendo agora, diminuindo por volta das {t}.",sum_range:"Chuva provável das {a} às {b}.",sum_heavy:"Mais forte por volta das {t}, com {v} {u} por hora.",sum_light:"Principalmente pancadas leves.",
+lb_feels:"Sensação",lb_wind:"Vento",lb_rain24:"Chuva próximas 24 h",lb_humidity:"Umidade",lb_uv:"Índice UV",lb_sunrise:"Nascer do sol",lb_sunset:"Pôr do sol",
+uv_low:"Baixo",uv_mod:"Moderado",uv_high:"Alto",uv_vhigh:"Muito alto",uv_ext:"Extremo",
+dry_title:"Melhor janela seca",dry_none:"Sem período seco longo nas próximas 24 horas",dry_all:"Seco pelas próximas 24 horas",hourly_title:"Próximas horas",details_title:"Detalhes",
+m_rain:"Chuva",m_now:"Próximas 2 horas",m_temp:"Temperatura",m_wind:"Vento",
+r_chance:"{p}% de chance de chuva",r_perhour:"{v} {u} por hora",r_now:"Agora",r_feels:"Sensação de {v}",r_wind:"Vento de {v} {u}",
+n_none:"Sem previsão de 2 horas aqui",n_na:"Indisponível",n_couldnot:"Não foi possível carregar a previsão de chuva de 2 horas.",n_dry:"Seco nas próximas 2 horas",n_dryuntil:"Sem chuva prevista até as {t}.",n_rainingnow:"Chovendo agora",n_continues:"A chuva continua pelas próximas 2 horas.",n_stops:"Para em cerca de {d}.",n_starts:"A chuva começa em {d}",n_around:"Por volta das {t} · {c}.",n_norain:"Sem chuva prevista",
+c_dry:"Seco",c_light:"Chuva fraca",c_moderate:"Chuva moderada",c_heavy:"Chuva forte",c_vheavy:"Chuva muito forte",
+lg_rain:"A linha mostra a chance de chuva. As barras mostram quanto cai por hora. Arraste pelo gráfico para ver qualquer hora.",lg_temp:"A linha contínua é a temperatura. A linha pontilhada é a sensação térmica. Arraste pelo gráfico para ver qualquer hora.",lg_wind:"A linha mostra a velocidade do vento em {u}. Arraste pelo gráfico para ver qualquer hora.",lg_radar:"Radar de chuva em passos de 5 minutos de {link}.",lg_sample:"Dados de exemplo em passos de 5 minutos.",lg_om:"Previsão em passos de 15 minutos. O radar de chuva em passos de 5 minutos só está disponível na Holanda e áreas próximas.",lg_bars:"As barras mostram a intensidade da chuva ({u} por hora). Arraste pelo gráfico para ver um momento.",
+d_min:"min",d_h:"h",
+wk_title:"Próximos 7 dias",wk_today:"Hoje",wk_rain:"{p}% de chuva",
+pl_title:"Locais",pl_search:"Procurar uma cidade",pl_btn:"Buscar",pl_loc:"Usar minha localização",pl_saved:"Locais salvos",pl_empty:"Nenhum local salvo ainda. Procure uma cidade e toque nela para salvar.",pl_results:"Resultados",pl_remove:"Remover",pl_current:"Exibindo agora",pl_noresults:"Nenhum local encontrado.",
+se_title:"Configurações",se_appearance:"Aparência",se_language:"Idioma",se_theme:"Tema",th_auto:"Automático",th_light:"Claro",th_dark:"Escuro",se_sky:"Cores do tempo no fundo",se_units:"Unidades",se_temp:"Temperatura",se_windu:"Velocidade do vento",se_rainu:"Chuva",se_time:"Formato de hora",se_general:"Geral",se_start:"Tela inicial",se_refresh:"Atualizar a cada",se_alerts:"Alertas",se_alerts_on:"Alertas de chuva",se_a_start:"A chuva vai começar",se_a_stop:"A chuva vai parar",se_a_dry:"Voltou a ficar seco",se_a_storm:"Alerta de tempestade",se_lead:"Avisar com antecedência",se_phone:"Notificações do celular",ph_off:"Desativadas",ph_on:"Ativadas",ph_denied:"Bloqueadas nos ajustes do iPhone",ph_nosupport:"Indisponível neste navegador. Adicione primeiro o app à tela de início.",se_test:"Enviar alerta de teste",se_about:"Sobre",se_reset:"Redefinir configurações",al_note:"Os alertas aparecem enquanto o app está aberto. O iPhone pausa apps em segundo plano, então receber avisos com o app fechado exige uma configuração extra.",
+al_start_t:"Chuva em breve",al_start_b:"A chuva começa em {d}.",al_stop_t:"A chuva vai parar",al_stop_b:"A chuva para em cerca de {d}.",al_dry_t:"Voltou a ficar seco",al_dry_b:"A chuva parou.",al_storm_t:"Alerta de tempestade",al_storm_b:"Tempestades são esperadas hoje.",al_test_t:"Alerta de teste",al_test_b:"Os alertas estão funcionando.",banner_close:"Fechar",
+foot:"Dados do tempo de {a}. Nomes de lugares do BigDataCloud."
+},
+it:{
+tab_today:"Oggi",tab_charts:"Grafici",tab_week:"Settimana",tab_places:"Luoghi",tab_settings:"Impostazioni",
+sample_place:"Previsioni di esempio",save_place:"Salva questo luogo",unsave_place:"Rimuovi dai luoghi salvati",refresh:"Aggiorna",
+st_loading:"Caricamento di {name}...",st_updated:"Aggiornato alle {t}.",st_finding:"Ricerca della tua posizione...",st_loadfc:"Caricamento previsioni...",st_locoff:"La posizione è disattivata per questa pagina. Cerca invece una città.",st_nogeo:"Questo browser non può condividere la tua posizione. Cerca invece una città.",st_lookup:"Ricerca di {q}...",st_notfound:"Nessun luogo trovato per {q}. Controlla l’ortografia.",st_fail:"Il meteo dal vivo non si può caricare ora, quindi vedi dati di esempio.",st_failrefresh:"Impossibile aggiornare. Mostro le ultime previsioni.",st_sample:"Dati di esempio mostrati. Cerca una città o usa la tua posizione.",
+w_sunny:"Soleggiato",w_mostlysunny:"Prevalentemente soleggiato",w_clear:"Sereno",w_mostlyclear:"Prevalentemente sereno",w_partly:"Parzialmente nuvoloso",w_cloudy:"Nuvoloso",w_fog:"Nebbia",w_drizzle:"Pioviggine",w_rain:"Piovoso",w_showers:"Rovesci",w_snow:"Neve",w_storm:"Temporale",
+tip_rain:"Pioggia oggi. Porta l’ombrello.",tip_storm:"Temporali oggi. Resta al sicuro al chiuso.",tip_snow:"Neve oggi. Vestiti pesante.",tip_sun:"Una giornata di sole. Metti gli occhiali da sole.",
+sum_none:"Nessuna pioggia prevista nelle prossime 24 ore.",sum_high:"La probabilità più alta è {p}% verso le {t}.",sum_now:"Sta piovendo, in attenuazione verso le {t}.",sum_range:"Pioggia probabile dalle {a} alle {b}.",sum_heavy:"Più intensa verso le {t}, con {v} {u} all’ora.",sum_light:"Soprattutto rovesci leggeri.",
+lb_feels:"Percepita",lb_wind:"Vento",lb_rain24:"Pioggia prossime 24 h",lb_humidity:"Umidità",lb_uv:"Indice UV",lb_sunrise:"Alba",lb_sunset:"Tramonto",
+uv_low:"Basso",uv_mod:"Moderato",uv_high:"Alto",uv_vhigh:"Molto alto",uv_ext:"Estremo",
+dry_title:"Migliore finestra asciutta",dry_none:"Nessun lungo periodo asciutto nelle prossime 24 ore",dry_all:"Asciutto nelle prossime 24 ore",hourly_title:"Prossime ore",details_title:"Dettagli",
+m_rain:"Pioggia",m_now:"Prossime 2 ore",m_temp:"Temperatura",m_wind:"Vento",
+r_chance:"{p}% di probabilità di pioggia",r_perhour:"{v} {u} all’ora",r_now:"Ora",r_feels:"Percepita {v}",r_wind:"Vento a {v} {u}",
+n_none:"Nessuna previsione a 2 ore qui",n_na:"Non disponibile",n_couldnot:"Non è stato possibile caricare le previsioni di pioggia a 2 ore.",n_dry:"Asciutto nelle prossime 2 ore",n_dryuntil:"Nessuna pioggia prevista fino alle {t}.",n_rainingnow:"Sta piovendo",n_continues:"La pioggia continua per le prossime 2 ore.",n_stops:"Smette tra circa {d}.",n_starts:"La pioggia inizia tra {d}",n_around:"Verso le {t} · {c}.",n_norain:"Nessuna pioggia prevista",
+c_dry:"Asciutto",c_light:"Pioggia debole",c_moderate:"Pioggia moderata",c_heavy:"Pioggia forte",c_vheavy:"Pioggia molto forte",
+lg_rain:"La linea mostra la probabilità di pioggia. Le barre mostrano quanta ne cade all’ora. Trascina sul grafico per controllare ogni ora.",lg_temp:"La linea continua è la temperatura. La linea tratteggiata è quella percepita. Trascina sul grafico per controllare ogni ora.",lg_wind:"La linea mostra la velocità del vento in {u}. Trascina sul grafico per controllare ogni ora.",lg_radar:"Radar della pioggia a passi di 5 minuti da {link}.",lg_sample:"Dati di esempio a passi di 5 minuti.",lg_om:"Previsioni a passi di 15 minuti. Il radar della pioggia a passi di 5 minuti è disponibile solo nei Paesi Bassi e nelle zone vicine.",lg_bars:"Le barre mostrano l’intensità della pioggia ({u} all’ora). Trascina sul grafico per controllare un momento.",
+d_min:"min",d_h:"h",
+wk_title:"Prossimi 7 giorni",wk_today:"Oggi",wk_rain:"{p}% di pioggia",
+pl_title:"Luoghi",pl_search:"Cerca una città",pl_btn:"Cerca",pl_loc:"Usa la mia posizione",pl_saved:"Luoghi salvati",pl_empty:"Nessun luogo salvato. Cerca una città e toccala per salvarla.",pl_results:"Risultati",pl_remove:"Rimuovi",pl_current:"Mostrato ora",pl_noresults:"Nessun luogo trovato.",
+se_title:"Impostazioni",se_appearance:"Aspetto",se_language:"Lingua",se_theme:"Tema",th_auto:"Automatico",th_light:"Chiaro",th_dark:"Scuro",se_sky:"Colori del meteo nello sfondo",se_units:"Unità",se_temp:"Temperatura",se_windu:"Velocità del vento",se_rainu:"Pioggia",se_time:"Formato dell’ora",se_general:"Generali",se_start:"Schermata iniziale",se_refresh:"Aggiorna ogni",se_alerts:"Avvisi",se_alerts_on:"Avvisi di pioggia",se_a_start:"Sta per iniziare a piovere",se_a_stop:"Sta per smettere di piovere",se_a_dry:"È di nuovo asciutto",se_a_storm:"Avviso di temporale",se_lead:"Avvisami in anticipo",se_phone:"Notifiche del telefono",ph_off:"Disattivate",ph_on:"Attivate",ph_denied:"Bloccate nelle impostazioni dell’iPhone",ph_nosupport:"Non disponibile in questo browser. Aggiungi prima l’app alla schermata Home.",se_test:"Invia un avviso di prova",se_about:"Info",se_reset:"Ripristina impostazioni",al_note:"Gli avvisi compaiono mentre l’app è aperta. L’iPhone mette in pausa le app in background, quindi ricevere avvisi ad app chiusa richiede una configurazione aggiuntiva.",
+al_start_t:"Pioggia in arrivo",al_start_b:"La pioggia inizia tra {d}.",al_stop_t:"La pioggia sta per finire",al_stop_b:"La pioggia smette tra circa {d}.",al_dry_t:"È di nuovo asciutto",al_dry_b:"La pioggia è finita.",al_storm_t:"Avviso di temporale",al_storm_b:"Oggi sono previsti temporali.",al_test_t:"Avviso di prova",al_test_b:"Gli avvisi funzionano.",banner_close:"Chiudi",
+foot:"Dati meteo da {a}. Nomi dei luoghi da BigDataCloud."
+},
+tr:{
+tab_today:"Bugün",tab_charts:"Grafikler",tab_week:"Hafta",tab_places:"Yerler",tab_settings:"Ayarlar",
+sample_place:"Örnek tahmin",save_place:"Bu yeri kaydet",unsave_place:"Kayıtlı yerlerden kaldır",refresh:"Yenile",
+st_loading:"{name} yükleniyor...",st_updated:"Saat {t} itibarıyla güncellendi.",st_finding:"Konumun aranıyor...",st_loadfc:"Tahmin yükleniyor...",st_locoff:"Bu sayfa için konum kapalı. Bunun yerine bir şehir ara.",st_nogeo:"Bu tarayıcı konumunu paylaşamıyor. Bunun yerine bir şehir ara.",st_lookup:"{q} aranıyor...",st_notfound:"{q} için yer bulunamadı. Yazımı kontrol et.",st_fail:"Canlı hava durumu şu an yüklenemiyor, bu yüzden örnek veriler görüyorsun.",st_failrefresh:"Yenilenemedi. Son tahmin gösteriliyor.",st_sample:"Örnek veriler gösteriliyor. Bir şehir ara veya konumunu kullan.",
+w_sunny:"Güneşli",w_mostlysunny:"Çoğunlukla güneşli",w_clear:"Açık",w_mostlyclear:"Çoğunlukla açık",w_partly:"Parçalı bulutlu",w_cloudy:"Bulutlu",w_fog:"Sisli",w_drizzle:"Çisenti",w_rain:"Yağmurlu",w_showers:"Sağanak",w_snow:"Karlı",w_storm:"Gök gürültülü fırtına",
+tip_rain:"Bugün yağmur var. Şemsiye al.",tip_storm:"Bugün gök gürültülü fırtına var. İçeride güvende kal.",tip_snow:"Bugün kar var. Sıkı giyin.",tip_sun:"Güneşli bir gün. Güneş gözlüğünü tak.",
+sum_none:"Önümüzdeki 24 saatte yağmur beklenmiyor.",sum_high:"En yüksek ihtimal {t} civarında %{p}.",sum_now:"Şu an yağmur yağıyor, {t} civarında hafifleyecek.",sum_range:"{a} ile {b} arasında yağmur olası.",sum_heavy:"En şiddetlisi {t} civarında, saatte {v} {u}.",sum_light:"Çoğunlukla hafif sağanaklar.",
+lb_feels:"Hissedilen",lb_wind:"Rüzgar",lb_rain24:"Sonraki 24 saat yağış",lb_humidity:"Nem",lb_uv:"UV indeksi",lb_sunrise:"Gün doğumu",lb_sunset:"Gün batımı",
+uv_low:"Düşük",uv_mod:"Orta",uv_high:"Yüksek",uv_vhigh:"Çok yüksek",uv_ext:"Aşırı",
+dry_title:"En iyi kuru zaman aralığı",dry_none:"Önümüzdeki 24 saatte uzun kuru bir dönem yok",dry_all:"Önümüzdeki 24 saat kuru",hourly_title:"Sonraki saatler",details_title:"Ayrıntılar",
+m_rain:"Yağmur",m_now:"Sonraki 2 saat",m_temp:"Sıcaklık",m_wind:"Rüzgar",
+r_chance:"%{p} yağmur ihtimali",r_perhour:"saatte {v} {u}",r_now:"Şimdi",r_feels:"Hissedilen {v}",r_wind:"{v} {u} rüzgar",
+n_none:"Burada 2 saatlik tahmin yok",n_na:"Kullanılamıyor",n_couldnot:"2 saatlik yağmur tahmini yüklenemedi.",n_dry:"Sonraki 2 saat kuru",n_dryuntil:"{t} saatine kadar yağmur beklenmiyor.",n_rainingnow:"Şu an yağmur yağıyor",n_continues:"Yağmur sonraki 2 saat boyunca sürecek.",n_stops:"Yaklaşık {d} sonra duracak.",n_starts:"Yağmur {d} sonra başlıyor",n_around:"{t} civarı · {c}.",n_norain:"Yağmur beklenmiyor",
+c_dry:"Kuru",c_light:"Hafif yağmur",c_moderate:"Orta şiddette yağmur",c_heavy:"Şiddetli yağmur",c_vheavy:"Çok şiddetli yağmur",
+lg_rain:"Çizgi yağmur ihtimalini gösterir. Çubuklar saatte ne kadar yağdığını gösterir. Herhangi bir saati görmek için grafik üzerinde sürükle.",lg_temp:"Düz çizgi sıcaklıktır. Noktalı çizgi hissedilen sıcaklıktır. Herhangi bir saati görmek için grafik üzerinde sürükle.",lg_wind:"Çizgi rüzgar hızını {u} cinsinden gösterir. Herhangi bir saati görmek için grafik üzerinde sürükle.",lg_radar:"{link} kaynaklı 5 dakikalık adımlarla yağmur radarı.",lg_sample:"5 dakikalık adımlarla örnek veriler.",lg_om:"15 dakikalık adımlarla tahmin. 5 dakikalık yağmur radarı yalnızca Hollanda ve yakın bölgelerde bulunur.",lg_bars:"Çubuklar yağmur şiddetini gösterir (saatte {u}). Bir anı görmek için grafik üzerinde sürükle.",
+d_min:"dk",d_h:"sa",
+wk_title:"Sonraki 7 gün",wk_today:"Bugün",wk_rain:"%{p} yağmur",
+pl_title:"Yerler",pl_search:"Şehir ara",pl_btn:"Ara",pl_loc:"Konumumu kullan",pl_saved:"Kayıtlı yerler",pl_empty:"Henüz kayıtlı yer yok. Bir şehir ara ve kaydetmek için ona dokun.",pl_results:"Sonuçlar",pl_remove:"Kaldır",pl_current:"Şu an gösterilen",pl_noresults:"Yer bulunamadı.",
+se_title:"Ayarlar",se_appearance:"Görünüm",se_language:"Dil",se_theme:"Tema",th_auto:"Otomatik",th_light:"Açık",th_dark:"Koyu",se_sky:"Arka planda hava durumu renkleri",se_units:"Birimler",se_temp:"Sıcaklık",se_windu:"Rüzgar hızı",se_rainu:"Yağmur",se_time:"Saat biçimi",se_general:"Genel",se_start:"Açılış ekranı",se_refresh:"Yenileme sıklığı",se_alerts:"Uyarılar",se_alerts_on:"Yağmur uyarıları",se_a_start:"Yağmur başlamak üzere",se_a_stop:"Yağmur dinmek üzere",se_a_dry:"Hava yine kuru",se_a_storm:"Gök gürültülü fırtına uyarısı",se_lead:"Önceden uyar",se_phone:"Telefon bildirimleri",ph_off:"Kapalı",ph_on:"Açık",ph_denied:"iPhone ayarlarında engellendi",ph_nosupport:"Bu tarayıcıda kullanılamıyor. Önce uygulamayı Ana Ekrana ekle.",se_test:"Deneme uyarısı gönder",se_about:"Hakkında",se_reset:"Ayarları sıfırla",al_note:"Uyarılar uygulama açıkken görünür. iPhone arka plandaki uygulamaları duraklatır, bu yüzden uygulama kapalıyken bildirim almak için ek kurulum gerekir.",
+al_start_t:"Yakında yağmur",al_start_b:"Yağmur {d} sonra başlıyor.",al_stop_t:"Yağmur dinmek üzere",al_stop_b:"Yağmur yaklaşık {d} sonra duruyor.",al_dry_t:"Hava yine kuru",al_dry_b:"Yağmur durdu.",al_storm_t:"Fırtına uyarısı",al_storm_b:"Bugün gök gürültülü fırtına bekleniyor.",al_test_t:"Deneme uyarısı",al_test_b:"Uyarılar çalışıyor.",banner_close:"Kapat",
+foot:"Hava durumu verileri {a} kaynaklı. Yer adları BigDataCloud kaynaklı."
+},
+ar:{
+tab_today:"اليوم",tab_charts:"الرسوم",tab_week:"الأسبوع",tab_places:"الأماكن",tab_settings:"الإعدادات",
+sample_place:"توقعات تجريبية",save_place:"حفظ هذا المكان",unsave_place:"إزالة من الأماكن المحفوظة",refresh:"تحديث",
+st_loading:"جارٍ تحميل {name}...",st_updated:"تم التحديث عند {t}.",st_finding:"جارٍ تحديد موقعك...",st_loadfc:"جارٍ تحميل التوقعات...",st_locoff:"الموقع متوقف لهذه الصفحة. ابحث عن مدينة بدلًا من ذلك.",st_nogeo:"لا يمكن لهذا المتصفح مشاركة موقعك. ابحث عن مدينة بدلًا من ذلك.",st_lookup:"جارٍ البحث عن {q}...",st_notfound:"لم يتم العثور على مكان باسم {q}. تحقق من الإملاء.",st_fail:"لا يمكن تحميل الطقس المباشر الآن، لذلك ترى بيانات تجريبية.",st_failrefresh:"تعذر التحديث. تُعرض آخر توقعات.",st_sample:"تُعرض بيانات تجريبية. ابحث عن مدينة أو استخدم موقعك.",
+w_sunny:"مشمس",w_mostlysunny:"مشمس غالبًا",w_clear:"صافٍ",w_mostlyclear:"صافٍ غالبًا",w_partly:"غائم جزئيًا",w_cloudy:"غائم",w_fog:"ضباب",w_drizzle:"رذاذ",w_rain:"ماطر",w_showers:"زخات",w_snow:"ثلوج",w_storm:"عاصفة رعدية",
+tip_rain:"مطر اليوم. خذ مظلة معك.",tip_storm:"عواصف رعدية اليوم. ابقَ في مكان آمن بالداخل.",tip_snow:"ثلوج اليوم. البس ملابس دافئة.",tip_sun:"يوم مشمس. ضع النظارات الشمسية.",
+sum_none:"لا يُتوقع مطر خلال الـ 24 ساعة القادمة.",sum_high:"أعلى احتمال هو {p}% حوالي {t}.",sum_now:"تمطر الآن، وتخف حوالي {t}.",sum_range:"مطر محتمل من {a} إلى {b}.",sum_heavy:"الأشد حوالي {t} بمعدل {v} {u} في الساعة.",sum_light:"زخات خفيفة في الغالب.",
+lb_feels:"الإحساس",lb_wind:"الرياح",lb_rain24:"مطر الـ 24 ساعة القادمة",lb_humidity:"الرطوبة",lb_uv:"مؤشر الأشعة فوق البنفسجية",lb_sunrise:"الشروق",lb_sunset:"الغروب",
+uv_low:"منخفض",uv_mod:"معتدل",uv_high:"مرتفع",uv_vhigh:"مرتفع جدًا",uv_ext:"شديد",
+dry_title:"أفضل فترة جافة",dry_none:"لا توجد فترة جافة طويلة خلال الـ 24 ساعة القادمة",dry_all:"جاف خلال الـ 24 ساعة القادمة",hourly_title:"الساعات القادمة",details_title:"التفاصيل",
+m_rain:"المطر",m_now:"الساعتان القادمتان",m_temp:"الحرارة",m_wind:"الرياح",
+r_chance:"احتمال المطر {p}%",r_perhour:"{v} {u} في الساعة",r_now:"الآن",r_feels:"الإحساس {v}",r_wind:"رياح {v} {u}",
+n_none:"لا توجد توقعات لساعتين هنا",n_na:"غير متاح",n_couldnot:"تعذر تحميل توقعات المطر للساعتين القادمتين.",n_dry:"جاف خلال الساعتين القادمتين",n_dryuntil:"لا يُتوقع مطر حتى {t}.",n_rainingnow:"تمطر الآن",n_continues:"يستمر المطر خلال الساعتين القادمتين.",n_stops:"يتوقف بعد حوالي {d}.",n_starts:"يبدأ المطر بعد {d}",n_around:"حوالي {t} · {c}.",n_norain:"لا يُتوقع مطر",
+c_dry:"جاف",c_light:"مطر خفيف",c_moderate:"مطر متوسط",c_heavy:"مطر غزير",c_vheavy:"مطر غزير جدًا",
+lg_rain:"الخط يوضح احتمال المطر. الأعمدة توضح كمية المطر في الساعة. اسحب على الرسم لمعرفة أي ساعة.",lg_temp:"الخط المتصل هو درجة الحرارة. الخط المنقط هو الإحساس بها. اسحب على الرسم لمعرفة أي ساعة.",lg_wind:"الخط يوضح سرعة الرياح بوحدة {u}. اسحب على الرسم لمعرفة أي ساعة.",lg_radar:"رادار المطر بخطوات 5 دقائق من {link}.",lg_sample:"بيانات تجريبية بخطوات 5 دقائق.",lg_om:"توقعات بخطوات 15 دقيقة. رادار المطر بخطوات 5 دقائق متاح فقط في هولندا والمناطق القريبة.",lg_bars:"الأعمدة توضح شدة المطر ({u} في الساعة). اسحب على الرسم لمعرفة لحظة معينة.",
+d_min:"د",d_h:"س",
+wk_title:"الأيام السبعة القادمة",wk_today:"اليوم",wk_rain:"مطر {p}%",
+pl_title:"الأماكن",pl_search:"ابحث عن مدينة",pl_btn:"بحث",pl_loc:"استخدم موقعي",pl_saved:"الأماكن المحفوظة",pl_empty:"لا توجد أماكن محفوظة بعد. ابحث عن مدينة واضغط عليها لحفظها.",pl_results:"النتائج",pl_remove:"إزالة",pl_current:"المعروض الآن",pl_noresults:"لم يتم العثور على أماكن.",
+se_title:"الإعدادات",se_appearance:"المظهر",se_language:"اللغة",se_theme:"السمة",th_auto:"تلقائي",th_light:"فاتح",th_dark:"داكن",se_sky:"ألوان الطقس في الخلفية",se_units:"الوحدات",se_temp:"الحرارة",se_windu:"سرعة الرياح",se_rainu:"المطر",se_time:"تنسيق الوقت",se_general:"عام",se_start:"شاشة البدء",se_refresh:"التحديث كل",se_alerts:"التنبيهات",se_alerts_on:"تنبيهات المطر",se_a_start:"المطر على وشك البدء",se_a_stop:"المطر على وشك التوقف",se_a_dry:"عاد الجو جافًا",se_a_storm:"تحذير من عاصفة رعدية",se_lead:"نبّهني قبل",se_phone:"إشعارات الهاتف",ph_off:"متوقفة",ph_on:"مفعّلة",ph_denied:"محظورة في إعدادات iPhone",ph_nosupport:"غير متاح في هذا المتصفح. أضف التطبيق إلى الشاشة الرئيسية أولًا.",se_test:"إرسال تنبيه تجريبي",se_about:"حول",se_reset:"إعادة ضبط الإعدادات",al_note:"تظهر التنبيهات أثناء فتح التطبيق. يوقف iPhone التطبيقات في الخلفية مؤقتًا، لذلك يحتاج استلام التنبيهات والتطبيق مغلق إلى إعداد إضافي.",
+al_start_t:"مطر قريبًا",al_start_b:"يبدأ المطر بعد {d}.",al_stop_t:"المطر على وشك التوقف",al_stop_b:"يتوقف المطر بعد حوالي {d}.",al_dry_t:"عاد الجو جافًا",al_dry_b:"توقف المطر.",al_storm_t:"تحذير من عاصفة رعدية",al_storm_b:"يُتوقع هطول عواصف رعدية اليوم.",al_test_t:"تنبيه تجريبي",al_test_b:"التنبيهات تعمل.",banner_close:"إغلاق",
+foot:"بيانات الطقس من {a}. أسماء الأماكن من BigDataCloud."
+},
+zh:{
+tab_today:"今天",tab_charts:"图表",tab_week:"本周",tab_places:"地点",tab_settings:"设置",
+sample_place:"示例预报",save_place:"保存此地点",unsave_place:"从已保存地点中移除",refresh:"刷新",
+st_loading:"正在加载{name}...",st_updated:"已于 {t} 更新。",st_finding:"正在获取你的位置...",st_loadfc:"正在加载预报...",st_locoff:"此页面的定位已关闭。请改为搜索城市。",st_nogeo:"此浏览器无法分享你的位置。请改为搜索城市。",st_lookup:"正在搜索{q}...",st_notfound:"未找到与{q}匹配的地点。请检查拼写。",st_fail:"暂时无法加载实时天气，因此显示的是示例数据。",st_failrefresh:"刷新失败，显示的是上次的预报。",st_sample:"正在显示示例数据。请搜索城市或使用你的位置。",
+w_sunny:"晴",w_mostlysunny:"大部晴朗",w_clear:"晴朗",w_mostlyclear:"大部晴朗",w_partly:"多云间晴",w_cloudy:"多云",w_fog:"有雾",w_drizzle:"毛毛雨",w_rain:"有雨",w_showers:"阵雨",w_snow:"有雪",w_storm:"雷暴",
+tip_rain:"今天有雨，记得带伞。",tip_storm:"今天有雷暴，请留在室内。",tip_snow:"今天有雪，注意保暖。",tip_sun:"晴朗的一天，戴上墨镜吧。",
+sum_none:"未来 24 小时预计无雨。",sum_high:"最高降雨概率为 {p}%，出现在 {t} 左右。",sum_now:"现在正在下雨，{t} 左右减弱。",sum_range:"{a} 至 {b} 可能有雨。",sum_heavy:"{t} 左右最强，每小时 {v} {u}。",sum_light:"以小阵雨为主。",
+lb_feels:"体感",lb_wind:"风",lb_rain24:"未来 24 小时降雨",lb_humidity:"湿度",lb_uv:"紫外线指数",lb_sunrise:"日出",lb_sunset:"日落",
+uv_low:"低",uv_mod:"中等",uv_high:"高",uv_vhigh:"很高",uv_ext:"极高",
+dry_title:"最佳干燥时段",dry_none:"未来 24 小时没有较长的干燥时段",dry_all:"未来 24 小时都是干燥的",hourly_title:"接下来几小时",details_title:"详情",
+m_rain:"降雨",m_now:"未来 2 小时",m_temp:"温度",m_wind:"风",
+r_chance:"降雨概率 {p}%",r_perhour:"每小时 {v} {u}",r_now:"现在",r_feels:"体感 {v}",r_wind:"风速 {v} {u}",
+n_none:"此处没有 2 小时预报",n_na:"不可用",n_couldnot:"无法加载 2 小时降雨预报。",n_dry:"未来 2 小时保持干燥",n_dryuntil:"预计 {t} 前无雨。",n_rainingnow:"现在正在下雨",n_continues:"未来 2 小时雨会持续。",n_stops:"约 {d}后停止。",n_starts:"{d}后开始下雨",n_around:"{t} 左右 · {c}。",n_norain:"预计无雨",
+c_dry:"干燥",c_light:"小雨",c_moderate:"中雨",c_heavy:"大雨",c_vheavy:"暴雨",
+lg_rain:"折线表示降雨概率，柱状表示每小时降雨量。在图表上滑动可查看任意小时。",lg_temp:"实线是温度，点线是体感温度。在图表上滑动可查看任意小时。",lg_wind:"折线表示风速，单位为 {u}。在图表上滑动可查看任意小时。",lg_radar:"来自 {link} 的降雨雷达，每 5 分钟一步。",lg_sample:"示例数据，每 5 分钟一步。",lg_om:"预报每 15 分钟一步。每 5 分钟一步的降雨雷达仅在荷兰及附近地区可用。",lg_bars:"柱状表示降雨强度（每小时 {u}）。在图表上滑动可查看某一时刻。",
+d_min:"分钟",d_h:"小时",
+wk_title:"未来 7 天",wk_today:"今天",wk_rain:"降雨 {p}%",
+pl_title:"地点",pl_search:"搜索城市",pl_btn:"搜索",pl_loc:"使用我的位置",pl_saved:"已保存的地点",pl_empty:"还没有已保存的地点。搜索城市并点按即可保存。",pl_results:"搜索结果",pl_remove:"移除",pl_current:"当前显示",pl_noresults:"未找到地点。",
+se_title:"设置",se_appearance:"外观",se_language:"语言",se_theme:"主题",th_auto:"自动",th_light:"浅色",th_dark:"深色",se_sky:"背景显示天气颜色",se_units:"单位",se_temp:"温度",se_windu:"风速",se_rainu:"降雨",se_time:"时间格式",se_general:"通用",se_start:"启动页面",se_refresh:"刷新间隔",se_alerts:"提醒",se_alerts_on:"降雨提醒",se_a_start:"即将开始下雨",se_a_stop:"雨即将停止",se_a_dry:"雨停了",se_a_storm:"雷暴预警",se_lead:"提前提醒",se_phone:"手机通知",ph_off:"关闭",ph_on:"开启",ph_denied:"已在 iPhone 设置中被禁止",ph_nosupport:"此浏览器不支持。请先将应用添加到主屏幕。",se_test:"发送测试提醒",se_about:"关于",se_reset:"重置设置",al_note:"应用打开时会显示提醒。iPhone 会暂停后台的应用，所以要在应用关闭时收到提醒，还需要额外设置。",
+al_start_t:"即将下雨",al_start_b:"{d}后开始下雨。",al_stop_t:"雨即将停止",al_stop_b:"约 {d}后雨会停止。",al_dry_t:"雨停了",al_dry_b:"雨已经停了。",al_storm_t:"雷暴预警",al_storm_b:"预计今天有雷暴。",al_test_t:"测试提醒",al_test_b:"提醒功能正常。",banner_close:"关闭",
+foot:"天气数据来自 {a}。地点名称来自 BigDataCloud。"
+}
+};
+I18N.en.here="Your location";
+I18N.nl.here="Jouw locatie";
+I18N.es.here="Tu ubicación";
+I18N.fr.here="Votre position";
+I18N.de.here="Dein Standort";
+I18N.pt.here="Sua localização";
+I18N.it.here="La tua posizione";
+I18N.tr.here="Konumun";
+I18N.ar.here="موقعك";
+I18N.zh.here="你的位置";
 
-  function $(id){return document.getElementById(id);}
-  function pad(n){return (n<10?'0':'')+n;}
-  function hourLabel(d){return pad(d.getHours())+':00';}
-  function hm(d){return pad(d.getHours())+':'+pad(d.getMinutes());}
-  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-  function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
-  function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
-  function dur(m){return m<60?m+' min':Math.floor(m/60)+' h'+(m%60?' '+(m%60)+' min':'');}
+/* ---------- constants ---------- */
+var W=640,H=300,L=44,R=14,T=14,B=30,PW=W-L-R,PH=H-T-B;
+var LANGS=[['en','English'],['nl','Nederlands'],['es','Español'],['fr','Français'],['de','Deutsch'],['pt','Português'],['it','Italiano'],['tr','Türkçe'],['ar','العربية'],['zh','中文']];
+var LOCS={en:'en',nl:'nl',es:'es',fr:'fr',de:'de',pt:'pt-BR',it:'it',tr:'tr',ar:'ar',zh:'zh-CN'};
+var TABKEYS=['today','charts','week','places','settings'];
+var HERE='@here';
+var DEF={lang:'',theme:'auto',sky:true,temp:'c',wind:'kmh',rain:'mm',time:'24',start:'today',refresh:10,
+  a_on:true,a_start:true,a_stop:false,a_dry:true,a_storm:true,a_lead:15,a_phone:false};
+var cfg={};
+var state={mode:'rain',data:null,now:null,place:null,cur:null,live:false,results:null,searched:false};
+var ch=null,loadedAt=0,tabIdx=0;
 
-  /* units: data is stored metric, converted only for display */
-  function imp(){return state.units==='imperial';}
-  function tmp(c){return imp()?c*9/5+32:c;}
-  function spd(k){return imp()?k*0.621371:k;}
-  function tU(){return imp()?'°F':'°C';}
-  function sU(){return imp()?'mph':'km/h';}
-  function aU(){return imp()?'in':'mm';}
-  function fmtAmt(mm){return imp()?(mm/25.4).toFixed(2):String(Math.round(mm*10)/10);}
+/* ---------- helpers ---------- */
+function $(id){return document.getElementById(id);}
+function pad(n){return (n<10?'0':'')+n;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 
-  /* weather codes -> icon kind + label */
-  function codeInfo(c){
-    if(c===0)return {kind:'sun',label:'Sunny'};
-    if(c===1)return {kind:'sun',label:'Mostly sunny'};
-    if(c===2)return {kind:'partly',label:'Partly cloudy'};
-    if(c===3)return {kind:'cloud',label:'Cloudy'};
-    if(c===45||c===48)return {kind:'fog',label:'Foggy'};
-    if(c>=51&&c<=57)return {kind:'rain',label:'Drizzle'};
-    if(c>=61&&c<=67)return {kind:'rain',label:'Rainy'};
-    if((c>=71&&c<=77)||c===85||c===86)return {kind:'snow',label:'Snowy'};
-    if(c>=80&&c<=82)return {kind:'rain',label:'Showers'};
-    if(c>=95)return {kind:'storm',label:'Thunderstorm'};
-    return {kind:'cloud',label:'Cloudy'};
+function t(k,v){
+  var s=(I18N[cfg.lang]&&I18N[cfg.lang][k])||I18N.en[k]||k;
+  if(v){for(var x in v){s=s.split('{'+x+'}').join(v[x]);}}
+  return s;
+}
+function LOCX(){return (LOCS[cfg.lang]||'en')+'-u-nu-latn';}
+function nfmt(x,minD,maxD){
+  try{return new Intl.NumberFormat(LOCX(),{minimumFractionDigits:minD,maximumFractionDigits:maxD}).format(x);}
+  catch(e){return (+x).toFixed(maxD);}
+}
+function dateStr(d,opts){
+  try{return d.toLocaleDateString(LOCX(),opts);}catch(e){return d.toDateString();}
+}
+function dur(m){
+  return m<60?m+' '+t('d_min'):Math.floor(m/60)+' '+t('d_h')+(m%60?' '+(m%60)+' '+t('d_min'):'');
+}
+function h12(h){return (h%12)||12;}
+function fmtH(d){var h=d.getHours();return cfg.time==='12'?h12(h)+' '+(h<12?'AM':'PM'):pad(h)+':00';}
+function fmtT(d){var h=d.getHours();return cfg.time==='12'?h12(h)+':'+pad(d.getMinutes())+' '+(h<12?'AM':'PM'):pad(h)+':'+pad(d.getMinutes());}
+function fmtAx(d){var h=d.getHours();return cfg.time==='12'?h12(h)+(h<12?'a':'p'):pad(h);}
+
+/* units: data is stored metric, converted only for display */
+function tmp(c){return cfg.temp==='f'?c*9/5+32:c;}
+function tU(){return cfg.temp==='f'?'°F':'°C';}
+function spd(k){var w=cfg.wind;return w==='mph'?k*0.621371:w==='ms'?k/3.6:w==='kn'?k*0.539957:k;}
+function sU(){return {kmh:'km/h',mph:'mph',ms:'m/s',kn:'kn'}[cfg.wind]||'km/h';}
+function aU(){return cfg.rain==='in'?'in':'mm';}
+function fmtAmt(mm){return cfg.rain==='in'?nfmt(mm/25.4,2,2):nfmt(Math.round(mm*10)/10,0,1);}
+
+/* ---------- settings storage ---------- */
+function detectLang(){
+  var n=((typeof navigator!=='undefined'&&navigator.language)||'en').slice(0,2).toLowerCase();
+  return I18N[n]?n:'en';
+}
+function loadCfg(){
+  var s={};
+  try{s=JSON.parse(lsGet('rl_set')||'{}')||{};}catch(e){}
+  var o={},k;
+  for(k in DEF){o[k]=(k in s)?s[k]:DEF[k];}
+  if(!I18N[o.lang])o.lang=detectLang();
+  if(lsGet('rl_set')===null&&lsGet('rl_units')==='imperial'){o.temp='f';o.wind='mph';o.rain='in';}
+  cfg=o;
+}
+function saveCfg(){lsSet('rl_set',JSON.stringify(cfg));}
+
+/* ---------- weather icons ---------- */
+function baseInfo(c){
+  if(c===0)return {kind:'sun',label:'w_sunny'};
+  if(c===1)return {kind:'sun',label:'w_mostlysunny'};
+  if(c===2)return {kind:'partly',label:'w_partly'};
+  if(c===3)return {kind:'cloud',label:'w_cloudy'};
+  if(c===45||c===48)return {kind:'fog',label:'w_fog'};
+  if(c>=51&&c<=57)return {kind:'rain',label:'w_drizzle'};
+  if(c>=61&&c<=67)return {kind:'rain',label:'w_rain'};
+  if((c>=71&&c<=77)||c===85||c===86)return {kind:'snow',label:'w_snow'};
+  if(c>=80&&c<=82)return {kind:'rain',label:'w_showers'};
+  if(c>=95)return {kind:'storm',label:'w_storm'};
+  return {kind:'cloud',label:'w_cloudy'};
+}
+function codeInfo(c,day){
+  var i=baseInfo(c);
+  if(day===false){
+    if(i.kind==='sun')return {kind:'moon',label:c===0?'w_clear':'w_mostlyclear'};
+    if(i.kind==='partly')return {kind:'moonpartly',label:'w_partly'};
   }
-
-  function icon(kind,size){
-    function cloud(dy){
-      return '<g class="c" transform="translate(0,'+dy+')"><circle cx="15" cy="27" r="7"/><circle cx="25" cy="21" r="9"/><circle cx="34" cy="28" r="6"/><rect x="15" y="27" width="19" height="7"/></g>';
-    }
-    function sun(cx,cy,r,ray){
-      var g='<g class="s"><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'"/>';
-      for(var k=0;k<8;k++){
-        var a=k*Math.PI/4,c=Math.cos(a),s=Math.sin(a);
-        g+='<line x1="'+(cx+c*(r+3))+'" y1="'+(cy+s*(r+3))+'" x2="'+(cx+c*(r+3+ray))+'" y2="'+(cy+s*(r+3+ray))+'"/>';
-      }
-      return g+'</g>';
-    }
-    var body='';
-    if(kind==='sun')body=sun(24,24,9,5);
-    else if(kind==='partly')body=sun(31,15,7,3)+'<g transform="translate(-2,6)">'+cloud(0)+'</g>';
-    else if(kind==='cloud')body=cloud(2);
-    else if(kind==='rain')body=cloud(-6)+'<line class="d" x1="16" y1="32" x2="13" y2="40"/><line class="d" x1="24" y1="34" x2="21" y2="42"/><line class="d" x1="32" y1="32" x2="29" y2="40"/>';
-    else if(kind==='storm')body=cloud(-6)+'<polygon class="b" points="27,27 19,38 25,38 22,47 33,34 27,34 30,27"/>';
-    else if(kind==='snow')body=cloud(-6)+'<circle class="n" cx="16" cy="34" r="2.6"/><circle class="n" cx="24" cy="38" r="2.6"/><circle class="n" cx="32" cy="34" r="2.6"/><circle class="n" cx="20" cy="43" r="2.2"/><circle class="n" cx="28" cy="43" r="2.2"/>';
-    else if(kind==='fog')body=cloud(-6)+'<line class="f" x1="12" y1="34" x2="36" y2="34"/><line class="f" x1="16" y1="40" x2="40" y2="40"/><line class="f" x1="12" y1="46" x2="34" y2="46"/>';
-    return '<svg class="wi" width="'+size+'" height="'+size+'" viewBox="0 0 48 48" aria-hidden="true">'+body+'</svg>';
+  return i;
+}
+function icon(kind,size){
+  function cloud(dy){
+    return '<g class="c" transform="translate(0,'+dy+')"><circle cx="15" cy="27" r="7"/><circle cx="25" cy="21" r="9"/><circle cx="34" cy="28" r="6"/><rect x="15" y="27" width="19" height="7"/></g>';
   }
-
-  /* data */
-  function sampleData(){
-    var now=new Date(); now.setMinutes(0,0,0);
-    var hours=[];
-    for(var i=0;i<25;i++){
-      var t=new Date(now.getTime()+i*36e5);
-      var g=function(c,w){return Math.exp(-Math.pow(i-c,2)/(2*w*w));};
-      var chance=Math.round(Math.min(96,8+88*g(7,2.2)+55*g(21,1.8)));
-      var mm=chance>40?+((chance-40)/56*2.4).toFixed(1):0;
-      var temp=+(14+5*Math.sin((t.getHours()-9)/24*2*Math.PI)-(chance>60?1.5:0)).toFixed(1);
-      var wind=+(12+14*g(7,3)+4*Math.sin(i/4)).toFixed(1);
-      var feels=+(temp-wind*0.1).toFixed(1);
-      hours.push({t:t,chance:chance,mm:mm,temp:temp,feels:feels,wind:wind});
+  function sun(cx,cy,r,ray){
+    var g='<g class="s"><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'"/>';
+    for(var k=0;k<8;k++){
+      var a=k*Math.PI/4,c=Math.cos(a),s=Math.sin(a);
+      g+='<line x1="'+(cx+c*(r+3))+'" y1="'+(cy+s*(r+3))+'" x2="'+(cx+c*(r+3+ray))+'" y2="'+(cy+s*(r+3+ray))+'"/>';
     }
-    var chances=[85,40,10,20,65,90,30],codes=[61,3,0,1,80,95,2],hi=[17,18,21,22,18,16,19],lo=[11,10,11,12,12,10,9],days=[];
-    for(var k=0;k<7;k++){
-      days.push({t:new Date(now.getFullYear(),now.getMonth(),now.getDate()+k),chance:chances[k],code:codes[k],hi:hi[k],lo:lo[k]});
-    }
-    return {hours:hours,days:days,current:{code:3}};
+    return g+'</g>';
   }
+  function moon(cx,cy,r,id){
+    return '<mask id="'+id+'"><rect width="48" height="48" fill="#fff"/><circle cx="'+(cx+r*0.6)+'" cy="'+(cy-r*0.5)+'" r="'+(r*0.82)+'" fill="#000"/></mask>'+
+      '<circle class="m" cx="'+cx+'" cy="'+cy+'" r="'+r+'" mask="url(#'+id+')"/>';
+  }
+  var body='';
+  if(kind==='sun')body=sun(24,24,9,5);
+  else if(kind==='moon')body=moon(22,26,13,'mm1');
+  else if(kind==='partly')body=sun(31,15,7,3)+'<g transform="translate(-2,6)">'+cloud(0)+'</g>';
+  else if(kind==='moonpartly')body=moon(30,15,8,'mm2')+'<g transform="translate(-2,6)">'+cloud(0)+'</g>';
+  else if(kind==='cloud')body=cloud(2);
+  else if(kind==='rain')body=cloud(-6)+'<line class="d" x1="16" y1="32" x2="13" y2="40"/><line class="d" x1="24" y1="34" x2="21" y2="42"/><line class="d" x1="32" y1="32" x2="29" y2="40"/>';
+  else if(kind==='storm')body=cloud(-6)+'<polygon class="b" points="27,27 19,38 25,38 22,47 33,34 27,34 30,27"/>';
+  else if(kind==='snow')body=cloud(-6)+'<circle class="n" cx="16" cy="34" r="2.6"/><circle class="n" cx="24" cy="38" r="2.6"/><circle class="n" cx="32" cy="34" r="2.6"/><circle class="n" cx="20" cy="43" r="2.2"/><circle class="n" cx="28" cy="43" r="2.2"/>';
+  else if(kind==='fog')body=cloud(-6)+'<line class="f" x1="12" y1="34" x2="36" y2="34"/><line class="f" x1="16" y1="40" x2="40" y2="40"/><line class="f" x1="12" y1="46" x2="34" y2="46"/>';
+  return '<svg class="wi" width="'+size+'" height="'+size+'" viewBox="0 0 48 48" aria-hidden="true">'+body+'</svg>';
+}
 
-  function sampleNow(){
-    var t0=new Date(); t0.setSeconds(0,0); t0.setMinutes(Math.floor(t0.getMinutes()/5)*5);
+/* ---------- data ---------- */
+function sampleData(){
+  var now=new Date(); now.setMinutes(0,0,0);
+  var hours=[];
+  for(var i=0;i<25;i++){
+    var tt=new Date(now.getTime()+i*36e5);
+    var g=function(c,w){return Math.exp(-Math.pow(i-c,2)/(2*w*w));};
+    var chance=Math.round(Math.min(96,8+88*g(7,2.2)+55*g(21,1.8)));
+    var mm=chance>40?+((chance-40)/56*2.4).toFixed(1):0;
+    var temp=+(14+5*Math.sin((tt.getHours()-9)/24*2*Math.PI)-(chance>60?1.5:0)).toFixed(1);
+    var wind=+(12+14*g(7,3)+4*Math.sin(i/4)).toFixed(1);
+    var feels=+(temp-wind*0.1).toFixed(1);
+    var hr=tt.getHours();
+    hours.push({t:tt,chance:chance,mm:mm,temp:temp,feels:feels,wind:wind,
+      code:chance>=70?63:(chance>=40?3:2),day:hr>=7&&hr<20,hum:Math.round(78-chance*0.15)});
+  }
+  var chances=[85,40,10,20,65,90,30],codes=[61,3,0,1,80,95,2],hi=[17,18,21,22,18,16,19],lo=[11,10,11,12,12,10,9],days=[];
+  for(var k=0;k<7;k++){
+    var d0=new Date(now.getFullYear(),now.getMonth(),now.getDate()+k);
+    days.push({t:d0,chance:chances[k],code:codes[k],hi:hi[k],lo:lo[k],
+      sunrise:new Date(d0.getFullYear(),d0.getMonth(),d0.getDate(),6,45),
+      sunset:new Date(d0.getFullYear(),d0.getMonth(),d0.getDate(),19,50),uv:5});
+  }
+  return {hours:hours,days:days,current:{code:3,day:hours[0].day}};
+}
+function sampleNow(){
+  var t0=new Date(); t0.setSeconds(0,0); t0.setMinutes(Math.floor(t0.getMinutes()/5)*5);
+  var pts=[];
+  for(var i=0;i<24;i++){
+    var v=2.6*Math.exp(-Math.pow(i-13,2)/(2*3.4*3.4));
+    pts.push({t:new Date(t0.getTime()+i*300000),mm:v<0.1?0:+v.toFixed(2)});
+  }
+  return {step:5,source:'sample',points:pts};
+}
+function fromApi(f){
+  var h=f.hourly,start=0;
+  if(f.current_weather&&f.current_weather.time){
+    var key=f.current_weather.time.slice(0,13)+':00';
+    var idx=h.time.findIndex(function(x){return x>=key;});
+    if(idx>=0)start=idx;
+  }
+  var hours=[];
+  for(var i=start;i<start+25&&i<h.time.length;i++){
+    hours.push({
+      t:new Date(h.time[i]),
+      chance:h.precipitation_probability[i]||0,
+      mm:h.precipitation[i]||0,
+      temp:h.temperature_2m[i],
+      feels:h.apparent_temperature[i],
+      wind:h.wind_speed_10m[i]||0,
+      code:h.weather_code?h.weather_code[i]:null,
+      day:h.is_day?h.is_day[i]===1:true,
+      hum:h.relative_humidity_2m?h.relative_humidity_2m[i]:null
+    });
+  }
+  var d=f.daily,days=[];
+  for(var k=0;k<d.time.length;k++){
+    var p=d.time[k].split('-');
+    days.push({
+      t:new Date(+p[0],+p[1]-1,+p[2]),
+      chance:d.precipitation_probability_max[k]||0,
+      code:d.weather_code[k],hi:d.temperature_2m_max[k],lo:d.temperature_2m_min[k],
+      sunrise:d.sunrise?new Date(d.sunrise[k]):null,
+      sunset:d.sunset?new Date(d.sunset[k]):null,
+      uv:d.uv_index_max?d.uv_index_max[k]:null
+    });
+  }
+  var cw=f.current_weather||{},code=days[0].code;
+  if(typeof cw.weathercode==='number')code=cw.weathercode;
+  else if(typeof cw.weather_code==='number')code=cw.weather_code;
+  var day=(typeof cw.is_day==='number')?cw.is_day===1:hours[0].day;
+  return {hours:hours,days:days,current:{code:code,day:day}};
+}
+
+/* 2-hour rain: Buienradar (5 min, Netherlands and nearby) or Open-Meteo (15 min) */
+function parseBuienradar(text){
+  var parts=text.trim().split(/\s+/).filter(function(x){return x.indexOf('|')>0;});
+  var base=new Date(),pts=[],prev=-1,dayAdd=0;
+  parts.forEach(function(line){
+    var a=line.split('|'),v=parseFloat(a[0].replace(',','.')),tt=a[1].split(':');
+    var mins=(+tt[0])*60+(+tt[1]);
+    if(prev>=0&&mins<prev)dayAdd++;
+    prev=mins;
+    var d=new Date(base.getFullYear(),base.getMonth(),base.getDate()+dayAdd,+tt[0],+tt[1]);
+    pts.push({t:d,mm:(isNaN(v)||v<=0)?0:Math.pow(10,(v-109)/32)});
+  });
+  if(pts.length<6)throw new Error('short');
+  return {step:5,source:'buienradar',points:pts};
+}
+function openMeteoNow(la,lo){
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+
+    '&minutely_15=precipitation&current_weather=true&forecast_days=2&timezone=auto';
+  return fetch(url).then(function(r){return r.json();}).then(function(j){
+    if(!j.minutely_15||!j.minutely_15.time)throw new Error('none');
+    var times=j.minutely_15.time,prec=j.minutely_15.precipitation;
+    var key=j.current_weather?j.current_weather.time:times[0];
+    var idx=times.findIndex(function(x){return x>=key;});
+    if(idx<0)idx=0;
     var pts=[];
-    for(var i=0;i<24;i++){
-      var v=2.6*Math.exp(-Math.pow(i-13,2)/(2*3.4*3.4));
-      pts.push({t:new Date(t0.getTime()+i*300000),mm:v<0.1?0:+v.toFixed(2)});
+    for(var k=0;k<9&&idx+k<times.length;k++){
+      pts.push({t:new Date(times[idx+k]),mm:(prec[idx+k]||0)*4});
     }
-    return {step:5,source:'sample',points:pts};
+    if(pts.length<3)throw new Error('short');
+    return {step:15,source:'openmeteo',points:pts};
+  });
+}
+function loadNowcast(lat,lon){
+  var la=+lat,lo=+lon,first;
+  if(la>=50&&la<=54&&lo>=1&&lo<=10){
+    first=fetch('https://gadgets.buienradar.nl/data/raintext?lat='+la.toFixed(2)+'&lon='+lo.toFixed(2))
+      .then(function(r){if(!r.ok)throw new Error('http');return r.text();})
+      .then(parseBuienradar);
+  }else{
+    first=Promise.reject(new Error('outside'));
   }
+  return first.catch(function(){return openMeteoNow(la,lo);})
+    .then(function(n){state.now=n;},function(){state.now=null;})
+    .then(function(){if(state.mode==='now')drawChart();});
+}
 
-  function fromApi(f){
-    var h=f.hourly,start=0;
-    if(f.current_weather&&f.current_weather.time){
-      var key=f.current_weather.time.slice(0,13)+':00';
-      var idx=h.time.findIndex(function(x){return x>=key;});
-      if(idx>=0)start=idx;
-    }
-    var hours=[];
-    for(var i=start;i<start+25&&i<h.time.length;i++){
-      hours.push({
-        t:new Date(h.time[i]),
-        chance:h.precipitation_probability[i]||0,
-        mm:h.precipitation[i]||0,
-        temp:h.temperature_2m[i],
-        feels:h.apparent_temperature[i],
-        wind:h.wind_speed_10m[i]||0
-      });
-    }
-    var d=f.daily,days=[];
-    for(var k=0;k<d.time.length;k++){
-      var p=d.time[k].split('-');
-      days.push({t:new Date(+p[0],+p[1]-1,+p[2]),chance:d.precipitation_probability_max[k]||0,code:d.weather_code[k],hi:d.temperature_2m_max[k],lo:d.temperature_2m_min[k]});
-    }
-    var cw=f.current_weather||{},code=days[0].code;
-    if(typeof cw.weathercode==='number')code=cw.weathercode;
-    else if(typeof cw.weather_code==='number')code=cw.weather_code;
-    return {hours:hours,days:days,current:{code:code}};
+/* ---------- Today tab ---------- */
+function placeText(){
+  var p=state.place;
+  if(!p)return t('sample_place');
+  return p===HERE?t('here'):p;
+}
+function hero(){
+  var d=state.data,cu=d.current,info=codeInfo(cu.code,cu.day),h0=d.hours[0];
+  $('hicon').innerHTML=icon(info.kind,84);
+  $('htemp').innerHTML=Math.round(tmp(h0.temp))+'<span class="u">'+tU()+'</span>';
+  $('hlabel').textContent=t(info.label);
+  document.documentElement.setAttribute('data-sky',cfg.sky?info.kind:'none');
+  var today=codeInfo(d.days[0].code,true).kind,tip='';
+  if(today==='rain')tip=t('tip_rain');
+  else if(today==='storm')tip=t('tip_storm');
+  else if(today==='snow')tip=t('tip_snow');
+  else if(today==='sun')tip=t('tip_sun');
+  $('tip').textContent=tip;
+}
+function summary(){
+  var hs=state.data.hours,best=0,i;
+  for(i=1;i<hs.length;i++){if(hs[i].chance>hs[best].chance)best=i;}
+  var wet=hs.map(function(h){return h.chance>=50;});
+  var first=wet.indexOf(true);
+  var s=$('summary'),sub=$('sub');
+  if(first<0){
+    s.textContent=t('sum_none');
+    sub.textContent=t('sum_high',{p:hs[best].chance,t:fmtH(hs[best].t)});
+  }else{
+    var last=first;
+    while(last+1<wet.length&&wet[last+1])last++;
+    var heavy=first;
+    for(i=first;i<=last;i++){if(hs[i].mm>hs[heavy].mm)heavy=i;}
+    s.textContent=first===0?t('sum_now',{t:fmtH(hs[last].t)}):t('sum_range',{a:fmtH(hs[first].t),b:fmtH(hs[last].t)});
+    sub.textContent=hs[heavy].mm>0?t('sum_heavy',{t:fmtH(hs[heavy].t),v:fmtAmt(hs[heavy].mm),u:aU()}):t('sum_light');
   }
-
-  /* 2-hour rain: Buienradar (5 min, Netherlands and nearby) or Open-Meteo (15 min) */
-  function parseBuienradar(text){
-    var parts=text.trim().split(/\s+/).filter(function(x){return x.indexOf('|')>0;});
-    var base=new Date(),pts=[],prev=-1,dayAdd=0;
-    parts.forEach(function(line){
-      var a=line.split('|'),v=parseFloat(a[0].replace(',','.')),tt=a[1].split(':');
-      var mins=(+tt[0])*60+(+tt[1]);
-      if(prev>=0&&mins<prev)dayAdd++;
-      prev=mins;
-      var d=new Date(base.getFullYear(),base.getMonth(),base.getDate()+dayAdd,+tt[0],+tt[1]);
-      pts.push({t:d,mm:(isNaN(v)||v<=0)?0:Math.pow(10,(v-109)/32)});
-    });
-    if(pts.length<6)throw new Error('short');
-    return {step:5,source:'buienradar',points:pts};
+  var total=0;
+  for(i=0;i<Math.min(24,hs.length);i++)total+=hs[i].mm;
+  $('sFeels').textContent=Math.round(tmp(hs[0].feels))+'°';
+  $('sWind').textContent=Math.round(spd(hs[0].wind))+' '+sU();
+  $('sRain').textContent=fmtAmt(total)+' '+aU();
+}
+function dryWindow(){
+  var hs=state.data.hours.slice(0,24),best=null,run=null,val;
+  hs.forEach(function(h,i){
+    var dry=h.chance<30&&h.mm<0.1;
+    if(dry){
+      if(!run)run={s:i,e:i};else run.e=i;
+      if(!best||(run.e-run.s)>(best.e-best.s))best={s:run.s,e:run.e};
+    }else run=null;
+  });
+  if(!best||best.e-best.s+1<2)val=t('dry_none');
+  else if(best.s===0&&best.e===hs.length-1)val=t('dry_all');
+  else{
+    var end=new Date(hs[best.e].t.getTime()+36e5);
+    val=fmtH(hs[best.s].t)+' – '+fmtH(end);
   }
-
-  function openMeteoNow(la,lo){
-    var url='https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+
-      '&minutely_15=precipitation&current_weather=true&forecast_days=2&timezone=auto';
-    return fetch(url).then(function(r){return r.json();}).then(function(j){
-      if(!j.minutely_15||!j.minutely_15.time)throw new Error('none');
-      var times=j.minutely_15.time,prec=j.minutely_15.precipitation;
-      var key=j.current_weather?j.current_weather.time:times[0];
-      var idx=times.findIndex(function(x){return x>=key;});
-      if(idx<0)idx=0;
-      var pts=[];
-      for(var k=0;k<9&&idx+k<times.length;k++){
-        pts.push({t:new Date(times[idx+k]),mm:(prec[idx+k]||0)*4});
-      }
-      if(pts.length<3)throw new Error('short');
-      return {step:15,source:'openmeteo',points:pts};
-    });
+  $('dry').innerHTML='<span>'+esc(t('dry_title'))+'</span><b>'+esc(val)+'</b>';
+}
+function strip(){
+  var hs=state.data.hours.slice(0,24),h='';
+  hs.forEach(function(x,i){
+    var info=codeInfo(x.code==null?state.data.current.code:x.code,x.day);
+    h+='<div class="hr"><span class="h">'+esc(i===0?t('r_now'):fmtH(x.t))+'</span>'+icon(info.kind,30)+
+      '<span class="tp">'+Math.round(tmp(x.temp))+'°</span><span class="pp">'+(x.chance>=20?x.chance+'%':'')+'</span></div>';
+  });
+  $('strip').innerHTML=h;
+}
+function details(){
+  var d0=state.data.days[0],h0=state.data.hours[0],uv='–';
+  if(d0.uv!=null){
+    var v=d0.uv,l=v<3?'uv_low':v<6?'uv_mod':v<8?'uv_high':v<11?'uv_vhigh':'uv_ext';
+    uv=Math.round(v)+' · '+t(l);
   }
+  var items=[
+    ['lb_humidity',h0.hum!=null?Math.round(h0.hum)+'%':'–'],
+    ['lb_uv',uv],
+    ['lb_sunrise',d0.sunrise?fmtT(d0.sunrise):'–'],
+    ['lb_sunset',d0.sunset?fmtT(d0.sunset):'–']
+  ];
+  $('details').innerHTML=items.map(function(x){
+    return '<div><dt>'+esc(t(x[0]))+'</dt><dd>'+esc(x[1])+'</dd></div>';
+  }).join('');
+}
 
-  function loadNowcast(lat,lon){
-    var la=+lat,lo=+lon,first;
-    if(la>=50&&la<=54&&lo>=1&&lo<=10){
-      first=fetch('https://gadgets.buienradar.nl/data/raintext?lat='+la.toFixed(2)+'&lon='+lo.toFixed(2))
-        .then(function(r){if(!r.ok)throw new Error('http');return r.text();})
-        .then(parseBuienradar);
-    }else{
-      first=Promise.reject(new Error('outside'));
-    }
-    return first.catch(function(){return openMeteoNow(la,lo);})
-      .then(function(n){state.now=n;},function(){state.now=null;})
-      .then(function(){if(state.mode==='now')draw();});
+/* ---------- Charts tab ---------- */
+function smooth(pts,yMin,yMax){
+  var d='M'+pts[0][0]+','+pts[0][1];
+  for(var i=0;i<pts.length-1;i++){
+    var p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+    var c1x=p1[0]+(p2[0]-p0[0])/6,c1y=clamp(p1[1]+(p2[1]-p0[1])/6,yMin,yMax);
+    var c2x=p2[0]-(p3[0]-p1[0])/6,c2y=clamp(p2[1]-(p3[1]-p1[1])/6,yMin,yMax);
+    d+='C'+c1x+','+c1y+' '+c2x+','+c2y+' '+p2[0]+','+p2[1];
   }
-
-  /* text helpers */
-  function smooth(pts,yMin,yMax){
-    var d='M'+pts[0][0]+','+pts[0][1];
-    for(var i=0;i<pts.length-1;i++){
-      var p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
-      var c1x=p1[0]+(p2[0]-p0[0])/6,c1y=clamp(p1[1]+(p2[1]-p0[1])/6,yMin,yMax);
-      var c2x=p2[0]-(p3[0]-p1[0])/6,c2y=clamp(p2[1]-(p3[1]-p1[1])/6,yMin,yMax);
-      d+='C'+c1x+','+c1y+' '+c2x+','+c2y+' '+p2[0]+','+p2[1];
-    }
-    return d;
+  return d;
+}
+function cat(mm){
+  if(mm<0.1)return t('c_dry');
+  if(mm<0.5)return t('c_light');
+  if(mm<2.5)return t('c_moderate');
+  if(mm<7.5)return t('c_heavy');
+  return t('c_vheavy');
+}
+function nowHeadline(N){
+  var P=N.points,step=N.step;
+  var wet=function(x){return x.mm>=0.1;};
+  var first=-1,i;
+  for(i=0;i<P.length;i++){if(wet(P[i])){first=i;break;}}
+  if(first<0)return {big:t('n_dry'),small:t('n_dryuntil',{t:fmtT(P[P.length-1].t)})};
+  if(first===0){
+    var end=-1;
+    for(i=1;i<P.length;i++){if(!wet(P[i])){end=i;break;}}
+    if(end<0)return {big:t('n_rainingnow'),small:t('n_continues')};
+    return {big:t('n_rainingnow'),small:t('n_stops',{d:dur(end*step)})};
   }
-
-  function cat(mm){
-    if(mm<0.1)return 'Dry';
-    if(mm<0.5)return 'Light rain';
-    if(mm<2.5)return 'Moderate rain';
-    if(mm<7.5)return 'Heavy rain';
-    return 'Very heavy rain';
+  return {big:t('n_starts',{d:dur(first*step)}),small:t('n_around',{t:fmtT(P[first].t),c:cat(P[first].mm)})};
+}
+function series(){
+  var hs=state.data.hours,m=state.mode;
+  if(m==='rain'){
+    return {vals:hs.map(function(h){return h.chance;}),lo:0,hi:100,ticks:[0,50,100],suffix:'%',cls:'rain',color:'rain'};
   }
-
-  function nowHeadline(N){
-    var P=N.points,step=N.step;
-    var wet=function(x){return x.mm>=0.1;};
-    var first=P.findIndex(wet);
-    if(first<0)return {big:'Dry for the next 2 hours',small:'No rain expected until '+hm(P[P.length-1].t)+'.'};
-    if(first===0){
-      var end=-1;
-      for(var i=1;i<P.length;i++){if(!wet(P[i])){end=i;break;}}
-      if(end<0)return {big:'Raining now',small:'Rain continues for the next 2 hours.'};
-      return {big:'Raining now',small:'Stops in about '+dur(end*step)+'.'};
-    }
-    return {big:'Rain starts in '+dur(first*step),small:'Around '+hm(P[first].t)+' · '+cat(P[first].mm)+'.'};
+  if(m==='wind'){
+    var w=hs.map(function(h){return spd(h.wind);});
+    var hi=Math.max(10,Math.ceil(Math.max.apply(null,w)/10)*10);
+    return {vals:w,lo:0,hi:hi,ticks:[0,hi/2,hi],suffix:'',cls:'wind',color:'wind'};
   }
-
-  /* screen sections */
-  function hero(){
-    var info=codeInfo(state.data.current.code),h0=state.data.hours[0];
-    $('hicon').innerHTML=icon(info.kind,84);
-    $('htemp').innerHTML=Math.round(tmp(h0.temp))+'<span class="u">'+tU()+'</span>';
-    $('hlabel').textContent=info.label;
-    document.documentElement.setAttribute('data-sky',info.kind);
-    var today=codeInfo(state.data.days[0].code),tip='';
-    if(today.kind==='rain')tip='Rain today. Take an umbrella.';
-    else if(today.kind==='storm')tip='Thunderstorms today. Stay safe indoors.';
-    else if(today.kind==='snow')tip='Snow today. Dress warm.';
-    else if(today.kind==='sun')tip='A sunny day. Sunglasses on.';
-    $('tip').textContent=tip;
-  }
-
-  function summary(){
-    var hs=state.data.hours,best=0,i;
-    for(i=1;i<hs.length;i++){if(hs[i].chance>hs[best].chance)best=i;}
-    var wet=hs.map(function(h){return h.chance>=50;});
-    var first=wet.indexOf(true);
-    var s=$('summary'),sub=$('sub');
-    if(first<0){
-      s.textContent='No rain expected in the next 24 hours.';
-      sub.textContent='The highest chance is '+hs[best].chance+'% around '+hourLabel(hs[best].t)+'.';
-    }else{
-      var last=first;
-      while(last+1<wet.length&&wet[last+1])last++;
-      var heavy=first;
-      for(i=first;i<=last;i++){if(hs[i].mm>hs[heavy].mm)heavy=i;}
-      s.textContent=first===0?'Raining now, easing around '+hourLabel(hs[last].t)+'.':'Rain likely from '+hourLabel(hs[first].t)+' to '+hourLabel(hs[last].t)+'.';
-      sub.textContent=hs[heavy].mm>0?'Heaviest around '+hourLabel(hs[heavy].t)+' at '+fmtAmt(hs[heavy].mm)+' '+aU()+' per hour.':'Mostly light showers.';
-    }
-    var total=0;
-    for(i=0;i<Math.min(24,hs.length);i++)total+=hs[i].mm;
-    $('sFeels').textContent=Math.round(tmp(hs[0].feels))+'°';
-    $('sWind').textContent=Math.round(spd(hs[0].wind))+' '+sU();
-    $('sRain').textContent=fmtAmt(total)+' '+aU();
-  }
-
-  function series(){
-    var hs=state.data.hours,m=state.mode;
-    if(m==='rain'){
-      return {vals:hs.map(function(h){return h.chance;}),lo:0,hi:100,ticks:[0,50,100],suffix:'%',cls:'rain',color:'rain'};
-    }
-    if(m==='wind'){
-      var w=hs.map(function(h){return spd(h.wind);});
-      var hi=Math.max(10,Math.ceil(Math.max.apply(null,w)/10)*10);
-      return {vals:w,lo:0,hi:hi,ticks:[0,hi/2,hi],suffix:'',cls:'wind',color:'wind'};
-    }
-    var a=hs.map(function(h){return tmp(h.temp);}),b=hs.map(function(h){return tmp(h.feels);});
-    var all=a.concat(b);
-    var lo=Math.floor(Math.min.apply(null,all)-1),hi2=Math.ceil(Math.max.apply(null,all)+1);
-    return {vals:a,vals2:b,lo:lo,hi:hi2,ticks:[lo,Math.round((lo+hi2)/2),hi2],suffix:'°',cls:'temp',color:'warm'};
-  }
-
-  function drawSeries(){
-    var hs=state.data.hours,n=hs.length-1,S=series(),rain=state.mode==='rain';
-    var X=function(i){return L+PW*i/n;},Y=function(v){return T+PH*(1-(v-S.lo)/(S.hi-S.lo));};
-    var pts=S.vals.map(function(v,i){return [X(i),Y(v)];});
-    var line=smooth(pts,T,T+PH);
-    var area=line+'L'+X(n)+','+(T+PH)+'L'+X(0)+','+(T+PH)+'Z';
-    var svg='<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">'+
-      '<stop offset="0%" style="stop-color:var(--'+S.color+');stop-opacity:.35"/>'+
-      '<stop offset="100%" style="stop-color:var(--'+S.color+');stop-opacity:0"/></linearGradient></defs>';
-    S.ticks.forEach(function(t){
-      svg+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(t)+'" y2="'+Y(t)+'"/>'+
-        '<text class="axis" x="'+(L-8)+'" y="'+(Y(t)+4)+'" text-anchor="end">'+t+S.suffix+'</text>';
-    });
-    if(rain){
-      var maxmm=Math.max.apply(null,[3].concat(hs.map(function(h){return h.mm;})));
-      hs.forEach(function(h,i){
-        if(h.mm<=0)return;
-        var bh=PH*0.45*h.mm/maxmm;
-        svg+='<rect class="bar" x="'+(X(i)-6)+'" y="'+(T+PH-bh)+'" width="12" height="'+bh+'" rx="3"/>';
-      });
-    }
-    svg+='<path d="'+area+'" fill="url(#g)"/>';
-    if(S.vals2){
-      var fp=S.vals2.map(function(v,i){return [X(i),Y(v)];});
-      svg+='<path class="line feels" d="'+smooth(fp,T,T+PH)+'"/>';
-    }
-    svg+='<path class="line '+S.cls+'" d="'+line+'"/>';
+  var a=hs.map(function(h){return tmp(h.temp);}),b=hs.map(function(h){return tmp(h.feels);});
+  var all=a.concat(b);
+  var lo=Math.floor(Math.min.apply(null,all)-1),hi2=Math.ceil(Math.max.apply(null,all)+1);
+  return {vals:a,vals2:b,lo:lo,hi:hi2,ticks:[lo,Math.round((lo+hi2)/2),hi2],suffix:'°',cls:'temp',color:'warm'};
+}
+function drawSeries(){
+  var hs=state.data.hours,n=hs.length-1,S=series(),rain=state.mode==='rain';
+  var X=function(i){return L+PW*i/n;},Y=function(v){return T+PH*(1-(v-S.lo)/(S.hi-S.lo));};
+  var pts=S.vals.map(function(v,i){return [X(i),Y(v)];});
+  var line=smooth(pts,T,T+PH);
+  var area=line+'L'+X(n)+','+(T+PH)+'L'+X(0)+','+(T+PH)+'Z';
+  var svg='<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0%" style="stop-color:var(--'+S.color+');stop-opacity:.35"/>'+
+    '<stop offset="100%" style="stop-color:var(--'+S.color+');stop-opacity:0"/></linearGradient></defs>';
+  S.ticks.forEach(function(tk){
+    svg+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(tk)+'" y2="'+Y(tk)+'"/>'+
+      '<text class="axis" x="'+(L-8)+'" y="'+(Y(tk)+4)+'" text-anchor="end">'+tk+S.suffix+'</text>';
+  });
+  if(rain){
+    var maxmm=Math.max.apply(null,[3].concat(hs.map(function(h){return h.mm;})));
     hs.forEach(function(h,i){
-      if(i%3===0){
-        svg+='<text class="axis" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+(i===0?'Now':pad(h.t.getHours()))+'</text>';
-      }
+      if(h.mm<=0)return;
+      var bh=PH*0.45*h.mm/maxmm;
+      svg+='<rect class="bar1" x="'+(X(i)-6)+'" y="'+(T+PH-bh)+'" width="12" height="'+bh+'" rx="3"/>';
     });
-    svg+='<line class="guide" id="guide" y1="'+T+'" y2="'+(T+PH)+'"/>'+
-      '<circle class="dot '+S.cls+'" id="dot" r="7"/>';
-    $('chart').innerHTML=svg;
-    cur={kind:'series',X:X,Y:Y,vals:S.vals,max:n};
-    var legends={
-      rain:'Line shows the chance of rain. Bars show how much falls per hour. Drag across the chart to check any hour.',
-      temp:'Solid line is the temperature. Dotted line is how it feels. Drag across the chart to check any hour.',
-      wind:'Line shows wind speed in '+sU()+'. Drag across the chart to check any hour.'
-    };
-    $('legend').textContent=legends[state.mode];
-    var start=0;
-    if(rain){for(var i=1;i<hs.length;i++){if(hs[i].chance>hs[start].chance)start=i;}}
-    setActive(start);
   }
-
-  function drawNow(){
-    var N=state.now;
-    if(!N){
-      $('chart').innerHTML='<text class="axis mid" x="'+(W/2)+'" y="'+(H/2)+'" text-anchor="middle">No 2-hour forecast here</text>';
-      $('readout').innerHTML='<div class="big">Not available</div><div class="small">The 2-hour rain forecast could not be loaded.</div>';
-      $('legend').textContent='';
-      cur=null;
-      return;
+  svg+='<path d="'+area+'" fill="url(#g)"/>';
+  if(S.vals2){
+    var fp=S.vals2.map(function(v,i){return [X(i),Y(v)];});
+    svg+='<path class="line feels" d="'+smooth(fp,T,T+PH)+'"/>';
+  }
+  svg+='<path class="line '+S.cls+'" d="'+line+'"/>';
+  hs.forEach(function(h,i){
+    if(i%3===0){
+      svg+='<text class="axis" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+(i===0?esc(t('r_now')):fmtAx(h.t))+'</text>';
     }
-    var P=N.points,n=P.length;
-    var maxmm=Math.max.apply(null,P.map(function(p){return p.mm;}));
-    var hi=maxmm<=1?1:maxmm<=2?2:maxmm<=5?5:Math.ceil(maxmm/5)*5;
-    var slot=PW/n,X=function(i){return L+slot*(i+0.5);},Y=function(v){return T+PH*(1-v/hi);};
-    var svg='';
-    [0,hi/2,hi].forEach(function(t){
-      svg+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(t)+'" y2="'+Y(t)+'"/>'+
-        '<text class="axis" x="'+(L-8)+'" y="'+(Y(t)+4)+'" text-anchor="end">'+fmtAmt(t)+'</text>';
-    });
-    P.forEach(function(p,i){
-      var bh=PH*p.mm/hi;
-      if(p.mm>0&&bh<3)bh=3;
-      if(bh<=0)return;
-      svg+='<rect class="nbar" x="'+(X(i)-slot*0.36)+'" y="'+(T+PH-bh)+'" width="'+(slot*0.72)+'" height="'+bh+'" rx="'+Math.min(4,slot*0.3)+'"/>';
-    });
-    P.forEach(function(p,i){
-      var off=Math.round((p.t-P[0].t)/60000);
-      if(off%30===0){
-        svg+='<text class="axis" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+(off===0?'Now':hm(p.t))+'</text>';
-      }
-    });
-    if(maxmm<0.1)svg+='<text class="axis mid" x="'+(W/2)+'" y="'+(T+PH/2)+'" text-anchor="middle">No rain expected</text>';
-    svg+='<line class="guide" id="guide" y1="'+T+'" y2="'+(T+PH)+'" style="display:none"/>';
-    $('chart').innerHTML=svg;
-    cur={kind:'now',X:X,slot:slot,max:n-1};
-    var src;
-    if(N.source==='buienradar')src='Rain radar in 5-minute steps from <a href="https://www.buienradar.nl" target="_blank" rel="noopener">Buienradar</a>.';
-    else if(N.source==='sample')src='Sample data in 5-minute steps.';
-    else src='Forecast in 15-minute steps. Rain radar in 5-minute steps is only available in the Netherlands and nearby areas.';
-    $('legend').innerHTML=src+' Bars show rain intensity ('+aU()+' per hour). Drag across the chart to check a moment.';
-    setActive(null);
+  });
+  svg+='<line class="guide" id="guide" y1="'+T+'" y2="'+(T+PH)+'"/>'+
+    '<circle class="dot '+S.cls+'" id="dot" r="7"/>';
+  $('chart').innerHTML=svg;
+  ch={kind:'series',X:X,Y:Y,vals:S.vals,max:n};
+  var legends={
+    rain:t('lg_rain'),temp:t('lg_temp'),wind:t('lg_wind',{u:sU()})
+  };
+  $('legend').textContent=legends[state.mode];
+  var start=0;
+  if(rain){for(var i=1;i<hs.length;i++){if(hs[i].chance>hs[start].chance)start=i;}}
+  setActive(start);
+}
+function drawNow(){
+  var N=state.now;
+  if(!N){
+    $('chart').innerHTML='<text class="axis mid" x="'+(W/2)+'" y="'+(H/2)+'" text-anchor="middle">'+esc(t('n_none'))+'</text>';
+    setReadout(esc(t('n_na')),esc(t('n_couldnot')));
+    $('legend').textContent='';
+    ch=null;
+    return;
   }
-
-  function draw(){
-    if(state.mode==='now')drawNow();else drawSeries();
-  }
-
-  function setReadout(big,small){
-    $('readout').innerHTML='<div class="big">'+big+'</div><div class="small">'+small+'</div>';
-  }
-
-  function setActive(i){
-    if(state.mode==='now'){
-      var N=state.now,g=$('guide');
-      if(!N||!g)return;
-      document.querySelectorAll('.nbar').forEach(function(b){b.classList.remove('on');});
-      if(i===null){
-        var hd=nowHeadline(N);
-        g.style.display='none';
-        setReadout(hd.big,hd.small);
-      }else{
-        var p=N.points[i],x=cur.X(i);
-        g.style.display='';g.setAttribute('x1',x);g.setAttribute('x2',x);
-        setReadout(cat(p.mm),(i===0?'Now':hm(p.t))+' · '+fmtAmt(p.mm)+' '+aU()+' per hour');
-        var bars=document.querySelectorAll('.nbar');
-        for(var k=0;k<bars.length;k++){
-          var bx=+bars[k].getAttribute('x')+(+bars[k].getAttribute('width'))/2;
-          if(Math.abs(bx-x)<0.5)bars[k].classList.add('on');
-        }
-      }
-      return;
+  var P=N.points,n=P.length;
+  var maxmm=Math.max.apply(null,P.map(function(p){return p.mm;}));
+  var hi=maxmm<=1?1:maxmm<=2?2:maxmm<=5?5:Math.ceil(maxmm/5)*5;
+  var slot=PW/n,X=function(i){return L+slot*(i+0.5);},Y=function(v){return T+PH*(1-v/hi);};
+  var svg='';
+  [0,hi/2,hi].forEach(function(tk){
+    svg+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(tk)+'" y2="'+Y(tk)+'"/>'+
+      '<text class="axis" x="'+(L-8)+'" y="'+(Y(tk)+4)+'" text-anchor="end">'+fmtAmt(tk)+'</text>';
+  });
+  P.forEach(function(p,i){
+    var bh=PH*p.mm/hi;
+    if(p.mm>0&&bh<3)bh=3;
+    if(bh<=0)return;
+    svg+='<rect class="nbar" data-i="'+i+'" x="'+(X(i)-slot*0.36)+'" y="'+(T+PH-bh)+'" width="'+(slot*0.72)+'" height="'+bh+'" rx="'+Math.min(4,slot*0.3)+'"/>';
+  });
+  P.forEach(function(p,i){
+    var off=Math.round((p.t-P[0].t)/60000);
+    if(off%30===0){
+      svg+='<text class="axis" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+(off===0?esc(t('r_now')):fmtT(p.t))+'</text>';
     }
-    var h=state.data.hours[i],m=state.mode;
-    var x2=cur.X(i),y=cur.Y(cur.vals[i]);
-    var g2=$('guide'),d=$('dot');
-    g2.setAttribute('x1',x2);g2.setAttribute('x2',x2);
-    d.setAttribute('cx',x2);d.setAttribute('cy',y);
-    var when=i===0?'Now':hourLabel(h.t),big,small;
-    if(m==='rain'){
-      big=h.chance+'% chance of rain';
-      small=when+(h.mm>0?' · '+fmtAmt(h.mm)+' '+aU()+' per hour':'');
-    }else if(m==='wind'){
-      big=Math.round(spd(h.wind))+' '+sU()+' wind';
-      small=when;
+  });
+  if(maxmm<0.1)svg+='<text class="axis mid" x="'+(W/2)+'" y="'+(T+PH/2)+'" text-anchor="middle">'+esc(t('n_norain'))+'</text>';
+  svg+='<line class="guide" id="guide" y1="'+T+'" y2="'+(T+PH)+'" style="display:none"/>';
+  $('chart').innerHTML=svg;
+  ch={kind:'now',X:X,slot:slot,max:n-1};
+  var src;
+  if(N.source==='buienradar')src=t('lg_radar',{link:'<a href="https://www.buienradar.nl" target="_blank" rel="noopener">Buienradar</a>'});
+  else if(N.source==='sample')src=t('lg_sample');
+  else src=t('lg_om');
+  $('legend').innerHTML=src+' '+esc(t('lg_bars',{u:aU()}));
+  setActive(null);
+}
+function drawChart(){
+  if(state.mode==='now')drawNow();else drawSeries();
+}
+function setReadout(big,small){
+  $('readout').innerHTML='<div class="big">'+big+'</div><div class="small">'+small+'</div>';
+}
+function setActive(i){
+  if(state.mode==='now'){
+    var N=state.now,g=$('guide');
+    if(!N||!g)return;
+    var bars=document.querySelectorAll('.nbar'),k;
+    for(k=0;k<bars.length;k++)bars[k].classList.remove('on');
+    if(i===null){
+      var hd=nowHeadline(N);
+      g.style.display='none';
+      setReadout(esc(hd.big),esc(hd.small));
     }else{
-      big=Math.round(tmp(h.temp))+tU();
-      small=when+' · Feels like '+Math.round(tmp(h.feels))+tU();
+      var p=N.points[i],x=ch.X(i);
+      g.style.display='';g.setAttribute('x1',x);g.setAttribute('x2',x);
+      setReadout(esc(cat(p.mm)),esc((i===0?t('r_now'):fmtT(p.t))+' · '+t('r_perhour',{v:fmtAmt(p.mm),u:aU()})));
+      for(k=0;k<bars.length;k++){
+        if(+bars[k].getAttribute('data-i')===i)bars[k].classList.add('on');
+      }
     }
-    setReadout(big,small);
+    return;
   }
+  var h=state.data.hours[i],m=state.mode;
+  var x2=ch.X(i),y=ch.Y(ch.vals[i]);
+  var g2=$('guide'),d=$('dot');
+  g2.setAttribute('x1',x2);g2.setAttribute('x2',x2);
+  d.setAttribute('cx',x2);d.setAttribute('cy',y);
+  var when=i===0?t('r_now'):fmtH(h.t),big,small;
+  if(m==='rain'){
+    big=t('r_chance',{p:h.chance});
+    small=when+(h.mm>0?' · '+t('r_perhour',{v:fmtAmt(h.mm),u:aU()}):'');
+  }else if(m==='wind'){
+    big=t('r_wind',{v:Math.round(spd(h.wind)),u:sU()});
+    small=when;
+  }else{
+    big=Math.round(tmp(h.temp))+tU();
+    small=when+' · '+t('r_feels',{v:Math.round(tmp(h.feels))+tU()});
+  }
+  setReadout(esc(big),esc(small));
+}
+function setMode(m){
+  state.mode=m;
+  syncModes();
+  drawChart();
+}
+function syncModes(){
+  var bs=document.querySelectorAll('#modes button');
+  for(var i=0;i<bs.length;i++){
+    bs[i].setAttribute('aria-pressed',bs[i].getAttribute('data-mode')===state.mode?'true':'false');
+  }
+}
 
-  function days(){
-    var ul=$('days');ul.innerHTML='';
-    state.data.days.forEach(function(d,k){
-      var li=document.createElement('li');
-      var name=k===0?'Today':d.t.toLocaleDateString('en',{weekday:'long'});
-      var info=codeInfo(d.code);
-      li.innerHTML='<span class="di">'+icon(info.kind,38)+'</span>'+
-        '<span class="dn"><b>'+name+'</b><small>'+info.label+'</small></span>'+
-        '<span class="dr"><span class="p">'+d.chance+'% rain</span>'+
-        '<span class="track" role="img" aria-label="'+d.chance+'% chance of rain"><span class="fill" style="width:'+d.chance+'%"></span></span></span>'+
-        '<span class="t">'+Math.round(tmp(d.hi))+'° <span>/ '+Math.round(tmp(d.lo))+'°</span></span>';
-      ul.appendChild(li);
+/* ---------- Week tab ---------- */
+function renderDays(){
+  var ul=$('days');ul.innerHTML='';
+  state.data.days.forEach(function(d,k){
+    var li=document.createElement('li');
+    var name=k===0?t('wk_today'):dateStr(d.t,{weekday:'long'});
+    var info=codeInfo(d.code,true);
+    li.innerHTML='<span class="di">'+icon(info.kind,38)+'</span>'+
+      '<span class="dn"><b>'+esc(name)+'</b><small>'+esc(t(info.label))+'</small></span>'+
+      '<span class="dr"><span class="p">'+esc(t('wk_rain',{p:d.chance}))+'</span>'+
+      '<span class="track" role="img" aria-label="'+d.chance+'%"><span class="fill" style="width:'+d.chance+'%"></span></span></span>'+
+      '<span class="t">'+Math.round(tmp(d.hi))+'° <span>/ '+Math.round(tmp(d.lo))+'°</span></span>';
+    ul.appendChild(li);
+  });
+}
+
+/* ---------- Places tab ---------- */
+function getPlaces(){try{return JSON.parse(lsGet('rl_places')||'[]')||[];}catch(e){return [];}}
+function setPlaces(a){lsSet('rl_places',JSON.stringify(a));}
+function pkey(lat,lon){return (+lat).toFixed(2)+','+(+lon).toFixed(2);}
+function isSaved(){
+  if(!state.cur)return false;
+  var k=pkey(state.cur.lat,state.cur.lon);
+  return getPlaces().some(function(p){return pkey(p.lat,p.lon)===k;});
+}
+function savePlace(p){
+  var arr=getPlaces(),k=pkey(p.lat,p.lon);
+  if(!arr.some(function(x){return pkey(x.lat,x.lon)===k;})){
+    arr.push({name:p.name,lat:p.lat,lon:p.lon});
+    setPlaces(arr);
+  }
+}
+function toggleSave(){
+  if(!state.cur||!state.live)return;
+  var k=pkey(state.cur.lat,state.cur.lon),arr=getPlaces();
+  if(isSaved())arr=arr.filter(function(p){return pkey(p.lat,p.lon)!==k;});
+  else arr.push({name:state.cur.name,lat:state.cur.lat,lon:state.cur.lon});
+  setPlaces(arr);
+  renderPlaces();updateStar();
+}
+function updateStar(){
+  var s=$('star'),saved=isSaved();
+  s.setAttribute('aria-pressed',saved?'true':'false');
+  s.setAttribute('aria-label',t(saved?'unsave_place':'save_place'));
+  s.disabled=!state.live;
+}
+function dispName(n){return n===HERE?t('here'):n;}
+function renderPlaces(){
+  var arr=getPlaces(),list=$('plist');
+  if(!arr.length){
+    list.innerHTML='<li class="empty">'+esc(t('pl_empty'))+'</li>';
+  }else{
+    var ck=state.cur?pkey(state.cur.lat,state.cur.lon):'';
+    list.innerHTML=arr.map(function(p,i){
+      var isCur=pkey(p.lat,p.lon)===ck;
+      return '<li><button type="button" class="pn" data-go="'+i+'">'+esc(dispName(p.name))+
+        (isCur?'<small>'+esc(t('pl_current'))+'</small>':'')+'</button>'+
+        '<button type="button" class="x" data-del="'+i+'" aria-label="'+esc(t('pl_remove'))+'">×</button></li>';
+    }).join('');
+  }
+  var res=$('results');
+  if(state.searched){
+    var rs=state.results||[];
+    res.innerHTML='<h3 class="sec">'+esc(t('pl_results'))+'</h3>'+(rs.length?
+      '<ul class="plist">'+rs.map(function(p,i){
+        var line=[p.name,p.admin1,p.country].filter(Boolean).join(', ');
+        return '<li><button type="button" class="pn" data-res="'+i+'">'+esc(line)+'</button></li>';
+      }).join('')+'</ul>':'<p class="snote">'+esc(t('pl_noresults'))+'</p>');
+  }else res.innerHTML='';
+}
+function doSearch(){
+  var q=$('city').value.trim();
+  if(!q)return;
+  status(t('st_lookup',{q:q}));
+  fetch('https://geocoding-api.open-meteo.com/v1/search?count=6&language='+cfg.lang+'&name='+encodeURIComponent(q))
+    .then(function(r){return r.json();})
+    .then(function(g){
+      state.results=g.results||[];state.searched=true;
+      renderPlaces();status('');
+    })
+    .catch(failed);
+}
+function pickResult(i){
+  var p=(state.results||[])[i];
+  if(!p)return;
+  var place={name:p.name+(p.country?', '+p.country:''),lat:p.latitude,lon:p.longitude};
+  savePlace(place);
+  state.searched=false;state.results=null;$('city').value='';
+  loadPlace(place).then(function(){goTab(0,true);}).catch(function(){});
+}
+function loadPlace(p){
+  status(t('st_loading',{name:dispName(p.name)}));
+  return loadForecast(p.lat,p.lon,p.name).catch(function(e){failed();throw e;});
+}
+
+/* ---------- network: forecast + names ---------- */
+function status(s){$('status').textContent=s;}
+function nameFor(lat,lon){
+  return fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lon+'&localityLanguage='+cfg.lang)
+    .then(function(r){return r.json();})
+    .then(function(j){
+      var c=j.city||j.locality||j.principalSubdivision;
+      if(!c)return HERE;
+      return c+(j.countryName?', '+j.countryName:'');
+    })
+    .catch(function(){return HERE;});
+}
+function loadForecast(lat,lon,name){
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+
+    '&current_weather=true&hourly=precipitation_probability,precipitation,temperature_2m,apparent_temperature,wind_speed_10m,weather_code,is_day,relative_humidity_2m'+
+    '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,uv_index_max&timezone=auto&forecast_days=7';
+  var ic=$('refreshIcon');
+  ic.classList.add('spin');
+  return fetch(url).then(function(r){return r.json();}).then(function(f){
+    if(!f.hourly)throw new Error('no data');
+    state.data=fromApi(f);state.place=name;state.live=true;state.now=null;loadedAt=Date.now();
+    state.cur={lat:lat,lon:lon,name:name};
+    lsSet('rl_place',JSON.stringify(state.cur));
+    renderAll();
+    status(t('st_updated',{t:fmtT(new Date())}));
+    return loadNowcast(lat,lon).then(evaluateAlerts);
+  }).then(function(x){ic.classList.remove('spin');return x;},function(e){ic.classList.remove('spin');throw e;});
+}
+function failed(){
+  if(!state.live){
+    state.place=null;state.data=sampleData();state.now=sampleNow();
+    renderAll();
+    status(t('st_fail'));
+  }else{
+    status(t('st_failrefresh'));
+  }
+}
+function readSaved(){
+  try{return JSON.parse(lsGet('rl_place')||'null');}catch(e){return null;}
+}
+function refreshSaved(silent){
+  var s=readSaved();
+  if(!s)return false;
+  if(!silent)status(t('st_loading',{name:dispName(s.name)}));
+  var p=s.name===HERE||s.name==='Your location'?nameFor(s.lat,s.lon):Promise.resolve(s.name);
+  p.then(function(name){return loadForecast(s.lat,s.lon,name);}).catch(failed);
+  return true;
+}
+function locate(){
+  if(!navigator.geolocation){status(t('st_nogeo'));return;}
+  status(t('st_finding'));
+  navigator.geolocation.getCurrentPosition(function(p){
+    var lat=p.coords.latitude.toFixed(3),lon=p.coords.longitude.toFixed(3);
+    status(t('st_loadfc'));
+    nameFor(lat,lon).then(function(name){return loadForecast(lat,lon,name);}).then(function(){goTab(0,true);}).catch(failed);
+  },function(){
+    status(t('st_locoff'));
+  },{timeout:10000});
+}
+
+/* ---------- Settings tab ---------- */
+var SCHEMA=[
+  {h:'se_appearance',rows:[
+    {k:'lang',t:'select',l:'se_language',o:function(){return LANGS;}},
+    {k:'theme',t:'seg',l:'se_theme',o:[['auto','th_auto',1],['light','th_light',1],['dark','th_dark',1]]},
+    {k:'sky',t:'sw',l:'se_sky'}]},
+  {h:'se_units',rows:[
+    {k:'temp',t:'seg',l:'se_temp',o:[['c','°C'],['f','°F']]},
+    {k:'wind',t:'seg',l:'se_windu',o:[['kmh','km/h'],['mph','mph'],['ms','m/s'],['kn','kn']]},
+    {k:'rain',t:'seg',l:'se_rainu',o:[['mm','mm'],['in','in']]},
+    {k:'time',t:'seg',l:'se_time',o:[['24','24 h'],['12','12 h']]}]},
+  {h:'se_general',rows:[
+    {k:'start',t:'select',l:'se_start',o:function(){return [['today',t('tab_today')],['charts',t('tab_charts')],['week',t('tab_week')],['places',t('tab_places')]];}},
+    {k:'refresh',t:'select',l:'se_refresh',o:function(){return [[5,'5 '+t('d_min')],[10,'10 '+t('d_min')],[15,'15 '+t('d_min')],[30,'30 '+t('d_min')]];}}]},
+  {h:'se_alerts',rows:[
+    {k:'a_on',t:'sw',l:'se_alerts_on'},
+    {k:'a_start',t:'sw',l:'se_a_start'},
+    {k:'a_stop',t:'sw',l:'se_a_stop'},
+    {k:'a_dry',t:'sw',l:'se_a_dry'},
+    {k:'a_storm',t:'sw',l:'se_a_storm'},
+    {k:'a_lead',t:'select',l:'se_lead',o:function(){return [[10,'10 '+t('d_min')],[15,'15 '+t('d_min')],[30,'30 '+t('d_min')]];}},
+    {k:'a_phone',t:'phone',l:'se_phone'},
+    {t:'note'},
+    {t:'test'}]}
+];
+function phoneStatus(){
+  if(typeof Notification==='undefined')return t('ph_nosupport');
+  if(Notification.permission==='denied')return t('ph_denied');
+  return (cfg.a_phone&&Notification.permission==='granted')?t('ph_on'):t('ph_off');
+}
+function renderSettings(){
+  var h='';
+  SCHEMA.forEach(function(sec){
+    h+='<h3 class="sec">'+esc(t(sec.h))+'</h3>';
+    sec.rows.forEach(function(r){
+      var v=cfg[r.k];
+      if(r.t==='sw'){
+        h+='<div class="srow inline"><span class="sl">'+esc(t(r.l))+'</span><button type="button" class="sw" role="switch" aria-checked="'+(v?'true':'false')+'" aria-label="'+esc(t(r.l))+'" data-sw="'+r.k+'"><i></i></button></div>';
+      }else if(r.t==='phone'){
+        h+='<div class="srow"><div class="srow inline" style="padding:0;border:0"><span class="sl">'+esc(t(r.l))+'</span><button type="button" class="sw" role="switch" aria-checked="'+(cfg.a_phone?'true':'false')+'" aria-label="'+esc(t(r.l))+'" data-sw="a_phone"><i></i></button></div><p class="snote">'+esc(phoneStatus())+'</p></div>';
+      }else if(r.t==='seg'){
+        h+='<div class="srow"><span class="sl">'+esc(t(r.l))+'</span><div class="seg">'+r.o.map(function(o){
+          return '<button type="button" data-set="'+r.k+'" data-val="'+o[0]+'" aria-pressed="'+(String(v)===String(o[0])?'true':'false')+'">'+esc(o[2]?t(o[1]):o[1])+'</button>';
+        }).join('')+'</div></div>';
+      }else if(r.t==='select'){
+        var opts=r.o();
+        h+='<div class="srow"><label class="sl" for="sel_'+r.k+'">'+esc(t(r.l))+'</label><select id="sel_'+r.k+'" data-sel="'+r.k+'">'+opts.map(function(o){
+          return '<option value="'+o[0]+'"'+(String(v)===String(o[0])?' selected':'')+'>'+esc(o[1])+'</option>';
+        }).join('')+'</select></div>';
+      }else if(r.t==='note'){
+        h+='<p class="snote">'+esc(t('al_note'))+'</p>';
+      }else if(r.t==='test'){
+        h+='<button type="button" class="sbtn" data-act="test">'+esc(t('se_test'))+'</button>';
+      }
     });
+  });
+  h+='<h3 class="sec">'+esc(t('se_about'))+'</h3>';
+  h+='<p class="about">Rainline 3 · '+t('foot',{a:'<a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>'})+'</p>';
+  h+='<button type="button" class="sbtn" data-act="reset">'+esc(t('se_reset'))+'</button>';
+  $('settings').innerHTML=h;
+}
+function applyStatic(){
+  var els=document.querySelectorAll('[data-i18n]'),i;
+  for(i=0;i<els.length;i++)els[i].textContent=t(els[i].getAttribute('data-i18n'));
+  els=document.querySelectorAll('[data-i18n-ph]');
+  for(i=0;i<els.length;i++)els[i].setAttribute('placeholder',t(els[i].getAttribute('data-i18n-ph')));
+  els=document.querySelectorAll('[data-i18n-aria]');
+  for(i=0;i<els.length;i++){
+    if(els[i].id==='star')continue;
+    els[i].setAttribute('aria-label',t(els[i].getAttribute('data-i18n-aria')));
   }
+}
+function applyCfg(){
+  var root=document.documentElement;
+  root.setAttribute('lang',LOCS[cfg.lang]||'en');
+  if(cfg.theme==='light'||cfg.theme==='dark')root.setAttribute('data-theme',cfg.theme);
+  else root.removeAttribute('data-theme');
+  document.body.className=cfg.lang==='ar'?'rtl':'';
+  applyStatic();
+}
+function renderAll(){
+  $('place').textContent=placeText();
+  $('date').textContent=dateStr(new Date(),{weekday:'long',day:'numeric',month:'long'});
+  hero();summary();dryWindow();strip();details();
+  syncModes();drawChart();
+  renderDays();renderPlaces();renderSettings();updateStar();
+  updInd();
+}
+function afterChange(k){
+  if(k==='refresh'){renderSettings();return;}
+  if(k==='start'||k.indexOf('a_')===0){renderSettings();return;}
+  applyCfg();renderAll();
+}
+function setKey(k,val){
+  if(k==='refresh'||k==='a_lead')val=+val;
+  cfg[k]=val;saveCfg();afterChange(k);
+}
+function onSettingsClick(e){
+  var el=e.target.closest?e.target.closest('[data-set],[data-sw],[data-act]'):null;
+  if(!el)return;
+  if(el.hasAttribute('data-set')){setKey(el.getAttribute('data-set'),el.getAttribute('data-val'));return;}
+  if(el.hasAttribute('data-sw')){
+    var k=el.getAttribute('data-sw');
+    if(k==='a_phone'){togglePhone();return;}
+    setKey(k,!cfg[k]);return;
+  }
+  var act=el.getAttribute('data-act');
+  if(act==='test'){fireAlert({title:t('al_test_t'),body:t('al_test_b')},true);}
+  else if(act==='reset'){
+    var keepLang=cfg.lang;
+    cfg={};for(var x in DEF)cfg[x]=DEF[x];cfg.lang=keepLang;
+    saveCfg();applyCfg();renderAll();
+  }
+}
+function togglePhone(){
+  if(cfg.a_phone){cfg.a_phone=false;saveCfg();renderSettings();return;}
+  if(typeof Notification==='undefined'){renderSettings();return;}
+  var done=function(p){cfg.a_phone=(p==='granted');saveCfg();renderSettings();};
+  try{
+    var r=Notification.requestPermission(done);
+    if(r&&r.then)r.then(done);
+  }catch(e){renderSettings();}
+}
 
-  function syncButtons(){
-    document.querySelectorAll('#modes button').forEach(function(b){
-      b.setAttribute('aria-pressed',b.getAttribute('data-mode')===state.mode?'true':'false');
-    });
-    document.querySelectorAll('#units button').forEach(function(b){
-      b.setAttribute('aria-pressed',b.getAttribute('data-units')===state.units?'true':'false');
-    });
+/* ---------- alerts ---------- */
+function readAlertState(){try{return JSON.parse(lsGet('rl_alert')||'{}')||{};}catch(e){return {};}}
+function showBanner(a){
+  $('bannerText').innerHTML='<b>'+esc(a.title)+'</b> '+esc(a.body);
+  $('banner').hidden=false;
+}
+function notify(a,force){
+  if(typeof Notification==='undefined'||Notification.permission!=='granted')return;
+  if(!cfg.a_phone&&!force)return;
+  try{
+    if(navigator.serviceWorker&&navigator.serviceWorker.ready){
+      navigator.serviceWorker.ready.then(function(reg){
+        reg.showNotification(a.title,{body:a.body,icon:'icon-192.png',tag:'rainline'});
+      });
+    }else{new Notification(a.title,{body:a.body});}
+  }catch(e){}
+}
+function fireAlert(a,force){
+  showBanner(a);
+  if(force||(typeof document!=='undefined'&&document.hidden))notify(a,force);
+}
+function evaluateAlerts(){
+  if(!cfg.a_on||!state.live||!state.data)return;
+  var as=readAlertState(),now=Date.now(),list=[],P,step,i;
+  if(state.now){P=state.now.points;step=state.now.step;}
+  else{P=state.data.hours.map(function(h){return {t:h.t,mm:h.mm};});step=60;}
+  var wet=function(x){return x.mm>=0.1;},wetNow=wet(P[0]),first=-1,stop=-1;
+  for(i=0;i<P.length;i++){if(wet(P[i])){first=i;break;}}
+  if(wetNow){for(i=1;i<P.length;i++){if(!wet(P[i])){stop=i;break;}}}
+  var lead=+cfg.a_lead;
+  if(cfg.a_start&&!wetNow&&first>0&&first*step<=lead&&now-(as.sStart||0)>60*60000){
+    list.push({title:t('al_start_t'),body:t('al_start_b',{d:dur(first*step)})});as.sStart=now;
   }
+  if(cfg.a_stop&&wetNow&&stop>0&&stop*step<=lead&&now-(as.sStop||0)>30*60000){
+    list.push({title:t('al_stop_t'),body:t('al_stop_b',{d:dur(stop*step)})});as.sStop=now;
+  }
+  if(cfg.a_dry&&as.wet===true&&!wetNow&&as.at&&now-as.at<3*3600000){
+    list.push({title:t('al_dry_t'),body:t('al_dry_b')});
+  }
+  var today=new Date().toDateString();
+  if(cfg.a_storm&&codeInfo(state.data.days[0].code,true).kind==='storm'&&as.sStorm!==today){
+    list.push({title:t('al_storm_t'),body:t('al_storm_b')});as.sStorm=today;
+  }
+  as.wet=wetNow;as.at=now;
+  lsSet('rl_alert',JSON.stringify(as));
+  list.forEach(function(a){fireAlert(a,false);});
+}
 
-  function render(){
-    $('place').textContent=state.place;
-    $('date').textContent=new Date().toLocaleDateString('en',{weekday:'long',day:'numeric',month:'long'});
-    hero();summary();draw();days();syncButtons();
+/* ---------- swipeable tabs ---------- */
+var pager=$('pager'),tabsEl=$('tabs'),ind=$('ind'),tabEls=[];
+function collectTabs(){tabEls=Array.prototype.slice.call(document.querySelectorAll('.tab'));}
+function paneW(){return pager.clientWidth||1;}
+function syncTabs(){
+  var i;
+  for(i=0;i<tabEls.length;i++){
+    tabEls[i].setAttribute('aria-selected',i===tabIdx?'true':'false');
   }
+  var tb=tabEls[tabIdx];
+  if(tb&&tabsEl){tabsEl.scrollLeft=tb.offsetLeft-(tabsEl.clientWidth-tb.offsetWidth)/2;}
+}
+function updInd(){
+  if(!tabEls.length)return;
+  var p=clamp(pager.scrollLeft/paneW(),0,tabEls.length-1);
+  var i=Math.floor(p),f=p-i,a=tabEls[i],b=tabEls[Math.min(i+1,tabEls.length-1)];
+  var left=a.offsetLeft+(b.offsetLeft-a.offsetLeft)*f;
+  var width=a.offsetWidth+(b.offsetWidth-a.offsetWidth)*f;
+  ind.style.left=(left+12)+'px';
+  ind.style.width=Math.max(0,width-24)+'px';
+  var idx=Math.round(p);
+  if(idx!==tabIdx){tabIdx=idx;syncTabs();}
+}
+function goTab(i,smooth){
+  var reduce=typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var x=i*paneW();
+  if(typeof pager.scrollTo==='function')pager.scrollTo({left:x,top:0,behavior:(smooth&&!reduce)?'smooth':'auto'});
+  else pager.scrollLeft=x;
+  tabIdx=i;syncTabs();updInd();
+}
 
-  function status(t){$('status').textContent=t;}
-  function clock(){return hm(new Date());}
-  function closePanel(){
-    $('panel').hidden=true;
-    $('change').setAttribute('aria-expanded','false');
-  }
-
-  /* place name for GPS coordinates (never rejects) */
-  function nameFor(lat,lon){
-    return fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lon+'&localityLanguage=en')
-      .then(function(r){return r.json();})
-      .then(function(j){
-        var c=j.city||j.locality||j.principalSubdivision;
-        if(!c)return 'Your location';
-        return c+(j.countryName?', '+j.countryName:'');
-      })
-      .catch(function(){return 'Your location';});
-  }
-
-  function loadForecast(lat,lon,name){
-    var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+
-      '&current_weather=true&hourly=precipitation_probability,precipitation,temperature_2m,apparent_temperature,wind_speed_10m'+
-      '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7';
-    return fetch(url).then(function(r){return r.json();}).then(function(f){
-      if(!f.hourly)throw new Error('no data');
-      state.data=fromApi(f);state.place=name;state.live=true;state.now=null;loadedAt=Date.now();
-      lsSet('rl_place',JSON.stringify({lat:lat,lon:lon,name:name}));
-      render();closePanel();status('Updated at '+clock()+'.');
-      return loadNowcast(lat,lon);
-    });
-  }
-
-  function failed(){
-    if(!state.live){
-      state.place='Sample forecast';
-      state.data=sampleData();state.now=sampleNow();
-      render();
-      status(FAIL);
-    }else{
-      status('Could not refresh. Showing the last forecast.');
-    }
-  }
-
-  function go(){
-    var q=$('city').value.trim();
-    if(!q)return;
-    status('Looking up '+q+'...');
-    fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name='+encodeURIComponent(q))
-      .then(function(r){return r.json();})
-      .then(function(g){
-        if(!g.results||!g.results.length){status('No place found called "'+q+'". Check the spelling.');return null;}
-        var p=g.results[0];
-        return loadForecast(p.latitude,p.longitude,p.name+(p.country?', '+p.country:''));
-      })
-      .catch(failed);
-  }
-
-  function locate(){
-    if(!navigator.geolocation){status('This browser cannot share your location. Search a city instead.');return;}
-    status('Finding your location...');
-    navigator.geolocation.getCurrentPosition(function(p){
-      var lat=p.coords.latitude.toFixed(3),lon=p.coords.longitude.toFixed(3);
-      status('Loading forecast...');
-      nameFor(lat,lon).then(function(name){return loadForecast(lat,lon,name);}).catch(failed);
-    },function(){
-      status('Location is turned off for this page. Search a city instead.');
-    },{timeout:10000});
-  }
-
-  function readSaved(){
-    try{return JSON.parse(lsGet('rl_place')||'null');}catch(e){return null;}
-  }
-
-  function refreshSaved(silent){
-    var saved=readSaved();
-    if(!saved)return false;
-    if(!silent)status('Loading '+saved.name+'...');
-    var p=saved.name==='Your location'?nameFor(saved.lat,saved.lon):Promise.resolve(saved.name);
-    p.then(function(name){return loadForecast(saved.lat,saved.lon,name);}).catch(failed);
-    return true;
-  }
-
-  /* events */
-  var svgEl=$('chart');
-  function pointer(e){
-    if(!cur)return;
-    var r=svgEl.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,i;
-    if(cur.kind==='now')i=clamp(Math.floor((x-L)/cur.slot),0,cur.max);
-    else i=clamp(Math.round((x-L)/PW*cur.max),0,cur.max);
-    setActive(i);
-  }
+/* ---------- events ---------- */
+function maybeRefresh(){
+  if(!document.hidden&&state.live&&Date.now()-loadedAt>(+cfg.refresh||10)*60*1000)refreshSaved(true);
+}
+function bind(){
+  var svgEl=$('chart'),ticking=false;
   svgEl.addEventListener('pointermove',pointer);
   svgEl.addEventListener('pointerdown',pointer);
   svgEl.addEventListener('pointerleave',function(e){
-    if(e.pointerType==='mouse'&&state.mode==='now'&&cur)setActive(null);
+    if(e.pointerType==='mouse'&&state.mode==='now'&&ch)setActive(null);
   });
-
-  document.querySelectorAll('#modes button').forEach(function(b){
-    b.addEventListener('click',function(){
-      state.mode=b.getAttribute('data-mode');
-      syncButtons();draw();
-    });
-  });
-  document.querySelectorAll('#units button').forEach(function(b){
-    b.addEventListener('click',function(){
-      state.units=b.getAttribute('data-units');
-      lsSet('rl_units',state.units);
-      render();
-    });
-  });
-  $('go').addEventListener('click',go);
-  $('locate').addEventListener('click',locate);
-  $('city').addEventListener('keydown',function(e){if(e.key==='Enter')go();});
-  $('change').addEventListener('click',function(){
-    var p=$('panel');
-    p.hidden=!p.hidden;
-    this.setAttribute('aria-expanded',p.hidden?'false':'true');
-    if(!p.hidden)$('city').focus();
-  });
-
-  function maybeRefresh(){
-    if(!document.hidden&&state.live&&Date.now()-loadedAt>5*60*1000)refreshSaved(true);
+  function pointer(e){
+    if(!ch)return;
+    var r=svgEl.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,i;
+    if(ch.kind==='now')i=clamp(Math.floor((x-L)/ch.slot),0,ch.max);
+    else i=clamp(Math.round((x-L)/PW*ch.max),0,ch.max);
+    setActive(i);
   }
+  pager.addEventListener('scroll',function(){
+    if(ticking)return;
+    ticking=true;
+    (window.requestAnimationFrame||function(f){f();})(function(){ticking=false;updInd();});
+  });
+  window.addEventListener('resize',function(){pager.scrollLeft=tabIdx*paneW();updInd();});
+  tabEls.forEach(function(b,i){b.addEventListener('click',function(){goTab(i,true);});});
+  var ms=document.querySelectorAll('#modes button');
+  for(var i=0;i<ms.length;i++){(function(b){
+    b.addEventListener('click',function(){setMode(b.getAttribute('data-mode'));});
+  })(ms[i]);}
+  $('go').addEventListener('click',doSearch);
+  $('city').addEventListener('keydown',function(e){if(e.key==='Enter')doSearch();});
+  $('locate').addEventListener('click',locate);
+  $('star').addEventListener('click',toggleSave);
+  $('refresh').addEventListener('click',function(){
+    if(!refreshSaved(false)){status(t('st_sample'));}
+  });
+  $('results').addEventListener('click',function(e){
+    var el=e.target.closest?e.target.closest('[data-res]'):null;
+    if(el)pickResult(+el.getAttribute('data-res'));
+  });
+  $('plist').addEventListener('click',function(e){
+    var go=e.target.closest?e.target.closest('[data-go]'):null,del=e.target.closest?e.target.closest('[data-del]'):null;
+    var arr=getPlaces();
+    if(go){
+      var p=arr[+go.getAttribute('data-go')];
+      if(p)loadPlace(p).then(function(){goTab(0,true);}).catch(function(){});
+    }else if(del){
+      arr.splice(+del.getAttribute('data-del'),1);
+      setPlaces(arr);renderPlaces();updateStar();
+    }
+  });
+  var st=$('settings');
+  st.addEventListener('click',onSettingsClick);
+  st.addEventListener('change',function(e){
+    var k=e.target.getAttribute&&e.target.getAttribute('data-sel');
+    if(k)setKey(k,e.target.value);
+  });
+  $('bannerClose').addEventListener('click',function(){$('banner').hidden=true;});
+  $('bannerText').addEventListener('click',function(){setMode('now');goTab(1,true);$('banner').hidden=true;});
   document.addEventListener('visibilitychange',maybeRefresh);
   setInterval(maybeRefresh,60*1000);
+}
 
-  /* start */
-  var u=lsGet('rl_units');
-  if(u==='metric'||u==='imperial')state.units=u;
-  var saved=readSaved();
-  state.data=sampleData();
-  state.now=sampleNow();
-  if(saved)state.place=saved.name;
-  render();
-  if(saved){
-    refreshSaved(false);
-  }else{
-    $('panel').hidden=false;
-    $('change').setAttribute('aria-expanded','true');
-    status('Showing sample data. Search a city or use your location.');
-  }
+/* ---------- start ---------- */
+loadCfg();
+applyCfg();
+collectTabs();
+state.data=sampleData();
+state.now=sampleNow();
+var saved=readSaved();
+if(saved){state.place=saved.name;state.cur=saved;}
+renderAll();
+bind();
+(function(){
+  var idx=saved?Math.max(0,TABKEYS.indexOf(cfg.start)):3;
+  if(idx<0||idx>3)idx=0;
+  goTab(idx,false);
+})();
+if(saved){refreshSaved(false);}
+else{status(t('st_sample'));}
 
-  if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
-    navigator.serviceWorker.register('sw.js').catch(function(){});
-  }
+if(typeof window!=='undefined'&&window.__RL_TEST){
+  window.__RL_TEST={state:state,get cfg(){return cfg;},t:t,evaluateAlerts:evaluateAlerts,setKey:setKey,renderAll:renderAll,goTab:goTab,parseBuienradar:parseBuienradar,I18N:I18N,setActive:setActive,setMode:setMode,fireAlert:fireAlert,codeInfo:codeInfo,icon:icon};
+}
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+
 })();
 </script>
 </body>
