@@ -242,6 +242,78 @@ input,select{
 .sw[aria-checked="true"]{background:var(--rain); justify-content:flex-end}
 .sbtn{margin:14px 10px 0 0}
 .about{color:var(--muted); font-size:.85rem; margin:20px 0 0}
+/* Leaflet essentials (from Leaflet, BSD-2-Clause) */
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
+.leaflet-container{overflow:hidden;-webkit-tap-highlight-color:transparent}
+.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow{-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+.leaflet-marker-icon,.leaflet-marker-shadow{display:block}
+.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}
+.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer,.leaflet-container .leaflet-tile{max-width:none!important;max-height:none!important;width:auto;padding:0}
+.leaflet-container.leaflet-touch-zoom{touch-action:pan-x pan-y}
+.leaflet-container.leaflet-touch-drag{touch-action:none}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{touch-action:none}
+.leaflet-tile{filter:inherit;visibility:hidden}
+.leaflet-tile-loaded{visibility:inherit}
+.leaflet-zoom-box{width:0;height:0;box-sizing:border-box;z-index:800}
+.leaflet-pane{z-index:400}
+.leaflet-tile-pane{z-index:200}
+.leaflet-overlay-pane{z-index:400}
+.leaflet-shadow-pane{z-index:500}
+.leaflet-marker-pane{z-index:600}
+.leaflet-map-pane canvas{z-index:100}
+.leaflet-map-pane svg{z-index:200}
+.leaflet-zoom-animated{transform-origin:0 0}
+svg.leaflet-zoom-animated{will-change:transform}
+.leaflet-zoom-anim .leaflet-zoom-animated{transition:transform .25s cubic-bezier(0,0,.25,1)}
+.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile{transition:none}
+.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}
+.leaflet-grab{cursor:grab}
+.leaflet-dragging .leaflet-grab{cursor:grabbing}
+
+/* radar tab */
+.mapwrap{position:relative}
+#map{
+  height:clamp(240px,42vh,400px); border-radius:16px; overflow:hidden; isolation:isolate;
+  background:var(--surface); border:1px solid var(--line); font:inherit;
+}
+.mapbadge{
+  position:absolute; top:10px; left:10px; z-index:5; padding:4px 11px; border-radius:999px;
+  background:var(--ink); color:var(--bg); font-size:.8rem; font-weight:700;
+}
+.mapbadge.fc{background:var(--warm); color:#fff}
+.mapbtns{position:absolute; top:10px; right:10px; z-index:5; display:flex; flex-direction:column; gap:6px}
+.mapbtn{
+  width:38px; height:38px; padding:0; border-radius:50%; background:var(--surface); border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-size:1.3rem; line-height:1; color:var(--ink);
+}
+.mapmsg{
+  position:absolute; inset:1px; z-index:6; display:flex; align-items:center; justify-content:center; text-align:center;
+  padding:20px; border-radius:15px; color:var(--muted); background:rgba(128,140,150,.16);
+}
+.rl-pin span{display:block; width:16px; height:16px; margin:3px; border-radius:50%; background:var(--rain); border:3px solid #fff; box-shadow:0 0 0 2px rgba(0,0,0,.28)}
+.rdtime{display:flex; align-items:center; justify-content:space-between; margin:14px 0 8px; direction:ltr}
+.rdc{text-align:center; display:flex; flex-direction:column; line-height:1.15}
+.rdc b{font-size:2.1rem; font-weight:800; letter-spacing:-.03em}
+.rdc small{color:var(--muted); font-size:.95rem}
+.rdarrow{font-size:2rem; padding:4px 16px; line-height:1}
+.scrub{
+  touch-action:none; -webkit-user-select:none; user-select:none; cursor:ew-resize; direction:ltr;
+  display:flex; align-items:center; justify-content:space-between; gap:10px; height:58px; padding:0 16px;
+  border-radius:16px; border:1px solid var(--line); color:var(--muted); font-size:.9rem; text-align:center;
+  background:repeating-linear-gradient(90deg,var(--line) 0 2px,transparent 2px 22px), var(--surface);
+}
+.scrub .arr{font-size:1.8rem; line-height:1; color:var(--ink)}
+.scrub span:nth-child(2){background:var(--surface); padding:2px 8px; border-radius:8px}
+.ovhit{padding:12px 0; cursor:pointer; direction:ltr}
+.ovbar{position:relative; height:8px; border-radius:999px; background:var(--line)}
+.ovbar i{position:absolute; top:50%; transform:translate(-50%,-50%); display:block}
+#ovnow{width:3px; height:18px; border-radius:2px; background:var(--muted)}
+#ovpos{width:18px; height:18px; border-radius:50%; background:var(--rain); border:3px solid var(--surface); box-shadow:0 0 0 1px var(--rain)}
+.rdctl{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin:4px 0 12px; flex-wrap:wrap}
+.rdstep .sl{font-size:.85rem; font-weight:400; color:var(--muted); margin-bottom:6px}
+.lgrow{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:.85rem; direction:ltr}
+.lgbar{flex:1; height:8px; border-radius:999px; background:linear-gradient(90deg,rgb(150,200,255),rgb(55,110,240),rgb(35,70,205),rgb(115,55,195),rgb(195,45,150))}
+
 .topic{
   display:block; padding:9px 12px; border-radius:10px; border:1px solid var(--line); background:var(--field);
   font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; word-break:break-all;
@@ -273,9 +345,10 @@ input,select{
     <nav class="tabs" id="tabs" role="tablist">
       <button class="tab" type="button" role="tab" data-tab="0" data-i18n="tab_today"></button>
       <button class="tab" type="button" role="tab" data-tab="1" data-i18n="tab_charts"></button>
-      <button class="tab" type="button" role="tab" data-tab="2" data-i18n="tab_week"></button>
-      <button class="tab" type="button" role="tab" data-tab="3" data-i18n="tab_places"></button>
-      <button class="tab" type="button" role="tab" data-tab="4" data-i18n="tab_settings"></button>
+      <button class="tab" type="button" role="tab" data-tab="2" data-i18n="tab_radar"></button>
+      <button class="tab" type="button" role="tab" data-tab="3" data-i18n="tab_week"></button>
+      <button class="tab" type="button" role="tab" data-tab="4" data-i18n="tab_places"></button>
+      <button class="tab" type="button" role="tab" data-tab="5" data-i18n="tab_settings"></button>
       <span class="ind" id="ind"></span>
     </nav>
   </div></header>
@@ -321,11 +394,40 @@ input,select{
     </div></section>
 
     <section class="pane" id="pane2" role="tabpanel"><div class="in">
+      <div class="mapwrap">
+        <div id="map"></div>
+        <div class="mapbadge" id="rdBadge"></div>
+        <div class="mapbtns">
+          <button class="mapbtn" id="rdCenter" type="button" data-i18n-aria="rd_center"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <button class="mapbtn" id="rdZoomIn" type="button" aria-label="+">+</button>
+          <button class="mapbtn" id="rdZoomOut" type="button" aria-label="−">−</button>
+        </div>
+        <div class="mapmsg" id="rdMsg" hidden></div>
+      </div>
+      <div class="rdtime">
+        <button class="iconbtn rdarrow" id="rdPrev" type="button" data-i18n-aria="rd_prev">‹</button>
+        <div class="rdc"><b id="rdClock"></b><small id="rdRel"></small></div>
+        <button class="iconbtn rdarrow" id="rdNext" type="button" data-i18n-aria="rd_next">›</button>
+      </div>
+      <div class="scrub" id="scrub" role="group"><span class="arr" aria-hidden="true">‹</span><span data-i18n="rd_swipe"></span><span class="arr" aria-hidden="true">›</span></div>
+      <div class="ovhit" id="ovbar"><div class="ovbar"><i id="ovnow"></i><i id="ovpos"></i></div></div>
+      <div class="rdctl">
+        <div class="rdstep"><span class="sl" data-i18n="rd_step"></span>
+          <div class="seg" id="rdStepSeg" role="group"><button type="button" data-rstep="5" aria-pressed="true"></button><button type="button" data-rstep="60" aria-pressed="false"></button></div>
+        </div>
+        <button class="ghost" id="rdPlay" type="button"></button>
+      </div>
+      <div class="lgrow"><span data-i18n="rd_light"></span><i class="lgbar"></i><span data-i18n="rd_heavy"></span></div>
+      <p class="snote" id="rdNote"></p>
+      <p class="snote" id="rdCredit"></p>
+    </div></section>
+
+    <section class="pane" id="pane3" role="tabpanel"><div class="in">
       <h2 data-i18n="wk_title"></h2>
       <ul class="days" id="days"></ul>
     </div></section>
 
-    <section class="pane" id="pane3" role="tabpanel"><div class="in">
+    <section class="pane" id="pane4" role="tabpanel"><div class="in">
       <div class="search">
         <input id="city" type="text" data-i18n-ph="pl_search" aria-label="Search" autocomplete="off">
         <button id="go" type="button" data-i18n="pl_btn"></button>
@@ -336,13 +438,14 @@ input,select{
       <ul class="plist" id="plist"></ul>
     </div></section>
 
-    <section class="pane" id="pane4" role="tabpanel"><div class="in">
+    <section class="pane" id="pane5" role="tabpanel"><div class="in">
       <h2 data-i18n="se_title"></h2>
       <div id="settings"></div>
     </div></section>
   </main>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (function(){
 var I18N={
@@ -687,15 +790,185 @@ I18N.zh.copy_fail="复制失败。请再点一次按钮。";
 I18N.zh.se_quiet="免打扰时段（不提醒）";
 I18N.zh.se_quiet_from="从";
 I18N.zh.se_quiet_to="到";
+I18N.en.tab_radar="Radar";
+I18N.en.rd_radar="Radar";
+I18N.en.rd_forecast="Forecast";
+I18N.en.rd_step="Time per swipe";
+I18N.en.rd_swipe="Swipe here to move through time";
+I18N.en.rd_play="Play";
+I18N.en.rd_pause="Pause";
+I18N.en.rd_loading="Loading radar...";
+I18N.en.rd_unavail="The radar map could not be loaded. Check your connection.";
+I18N.en.rd_light="Light";
+I18N.en.rd_heavy="Heavy";
+I18N.en.rd_note="Radar shows the last 2 hours in 10-minute frames, so 5-minute steps blend between two frames. After now it is a model forecast, which is less exact.";
+I18N.en.rd_credit="Radar: {a}. Forecast: {b}. Map: {c}.";
+I18N.en.rd_prev="Earlier";
+I18N.en.rd_next="Later";
+I18N.en.rd_center="Center on my place";
+I18N.en.rd_fc_na="The forecast layer is not available.";
+I18N.nl.tab_radar="Radar";
+I18N.nl.rd_radar="Radar";
+I18N.nl.rd_forecast="Verwachting";
+I18N.nl.rd_step="Tijd per veeg";
+I18N.nl.rd_swipe="Veeg hier om door de tijd te gaan";
+I18N.nl.rd_play="Afspelen";
+I18N.nl.rd_pause="Pauzeren";
+I18N.nl.rd_loading="Radar laden...";
+I18N.nl.rd_unavail="De radarkaart kon niet worden geladen. Controleer je verbinding.";
+I18N.nl.rd_light="Licht";
+I18N.nl.rd_heavy="Zwaar";
+I18N.nl.rd_note="De radar toont de afgelopen 2 uur in beelden van 10 minuten, dus stappen van 5 minuten vloeien tussen twee beelden. Na nu is het een modelverwachting, die minder nauwkeurig is.";
+I18N.nl.rd_credit="Radar: {a}. Verwachting: {b}. Kaart: {c}.";
+I18N.nl.rd_prev="Eerder";
+I18N.nl.rd_next="Later";
+I18N.nl.rd_center="Centreren op mijn plaats";
+I18N.nl.rd_fc_na="De verwachtingslaag is niet beschikbaar.";
+I18N.es.tab_radar="Radar";
+I18N.es.rd_radar="Radar";
+I18N.es.rd_forecast="Pronóstico";
+I18N.es.rd_step="Tiempo por deslizamiento";
+I18N.es.rd_swipe="Desliza aquí para moverte en el tiempo";
+I18N.es.rd_play="Reproducir";
+I18N.es.rd_pause="Pausa";
+I18N.es.rd_loading="Cargando radar...";
+I18N.es.rd_unavail="No se pudo cargar el mapa de radar. Revisa tu conexión.";
+I18N.es.rd_light="Ligera";
+I18N.es.rd_heavy="Fuerte";
+I18N.es.rd_note="El radar muestra las últimas 2 horas en imágenes de 10 minutos, así que los pasos de 5 minutos combinan dos imágenes. Después de ahora es un pronóstico de modelo, menos exacto.";
+I18N.es.rd_credit="Radar: {a}. Pronóstico: {b}. Mapa: {c}.";
+I18N.es.rd_prev="Antes";
+I18N.es.rd_next="Después";
+I18N.es.rd_center="Centrar en mi lugar";
+I18N.es.rd_fc_na="La capa de pronóstico no está disponible.";
+I18N.fr.tab_radar="Radar";
+I18N.fr.rd_radar="Radar";
+I18N.fr.rd_forecast="Prévision";
+I18N.fr.rd_step="Durée par balayage";
+I18N.fr.rd_swipe="Balayez ici pour avancer dans le temps";
+I18N.fr.rd_play="Lecture";
+I18N.fr.rd_pause="Pause";
+I18N.fr.rd_loading="Chargement du radar...";
+I18N.fr.rd_unavail="La carte radar n’a pas pu être chargée. Vérifiez votre connexion.";
+I18N.fr.rd_light="Faible";
+I18N.fr.rd_heavy="Forte";
+I18N.fr.rd_note="Le radar montre les 2 dernières heures en images de 10 minutes : les pas de 5 minutes fondent donc deux images. Après maintenant, c’est une prévision de modèle, moins précise.";
+I18N.fr.rd_credit="Radar : {a}. Prévision : {b}. Carte : {c}.";
+I18N.fr.rd_prev="Avant";
+I18N.fr.rd_next="Après";
+I18N.fr.rd_center="Centrer sur mon lieu";
+I18N.fr.rd_fc_na="La couche de prévision n’est pas disponible.";
+I18N.de.tab_radar="Radar";
+I18N.de.rd_radar="Radar";
+I18N.de.rd_forecast="Vorhersage";
+I18N.de.rd_step="Zeit pro Wischen";
+I18N.de.rd_swipe="Hier wischen, um durch die Zeit zu gehen";
+I18N.de.rd_play="Abspielen";
+I18N.de.rd_pause="Pause";
+I18N.de.rd_loading="Radar wird geladen...";
+I18N.de.rd_unavail="Die Radarkarte konnte nicht geladen werden. Prüfe deine Verbindung.";
+I18N.de.rd_light="Leicht";
+I18N.de.rd_heavy="Stark";
+I18N.de.rd_note="Das Radar zeigt die letzten 2 Stunden in 10-Minuten-Bildern, deshalb blenden 5-Minuten-Schritte zwischen zwei Bildern über. Nach jetzt ist es eine Modellvorhersage, die ungenauer ist.";
+I18N.de.rd_credit="Radar: {a}. Vorhersage: {b}. Karte: {c}.";
+I18N.de.rd_prev="Früher";
+I18N.de.rd_next="Später";
+I18N.de.rd_center="Auf meinen Ort zentrieren";
+I18N.de.rd_fc_na="Die Vorhersageebene ist nicht verfügbar.";
+I18N.pt.tab_radar="Radar";
+I18N.pt.rd_radar="Radar";
+I18N.pt.rd_forecast="Previsão";
+I18N.pt.rd_step="Tempo por deslize";
+I18N.pt.rd_swipe="Deslize aqui para se mover no tempo";
+I18N.pt.rd_play="Reproduzir";
+I18N.pt.rd_pause="Pausar";
+I18N.pt.rd_loading="Carregando radar...";
+I18N.pt.rd_unavail="Não foi possível carregar o mapa do radar. Verifique sua conexão.";
+I18N.pt.rd_light="Fraca";
+I18N.pt.rd_heavy="Forte";
+I18N.pt.rd_note="O radar mostra as últimas 2 horas em imagens de 10 minutos, então passos de 5 minutos combinam duas imagens. Depois de agora é uma previsão de modelo, menos exata.";
+I18N.pt.rd_credit="Radar: {a}. Previsão: {b}. Mapa: {c}.";
+I18N.pt.rd_prev="Antes";
+I18N.pt.rd_next="Depois";
+I18N.pt.rd_center="Centralizar no meu local";
+I18N.pt.rd_fc_na="A camada de previsão não está disponível.";
+I18N.it.tab_radar="Radar";
+I18N.it.rd_radar="Radar";
+I18N.it.rd_forecast="Previsione";
+I18N.it.rd_step="Tempo per scorrimento";
+I18N.it.rd_swipe="Scorri qui per muoverti nel tempo";
+I18N.it.rd_play="Riproduci";
+I18N.it.rd_pause="Pausa";
+I18N.it.rd_loading="Caricamento del radar...";
+I18N.it.rd_unavail="Impossibile caricare la mappa radar. Controlla la connessione.";
+I18N.it.rd_light="Debole";
+I18N.it.rd_heavy="Forte";
+I18N.it.rd_note="Il radar mostra le ultime 2 ore in immagini da 10 minuti, quindi i passi da 5 minuti sfumano tra due immagini. Dopo ora è una previsione di modello, meno precisa.";
+I18N.it.rd_credit="Radar: {a}. Previsione: {b}. Mappa: {c}.";
+I18N.it.rd_prev="Prima";
+I18N.it.rd_next="Dopo";
+I18N.it.rd_center="Centra sul mio luogo";
+I18N.it.rd_fc_na="Il livello di previsione non è disponibile.";
+I18N.tr.tab_radar="Radar";
+I18N.tr.rd_radar="Radar";
+I18N.tr.rd_forecast="Tahmin";
+I18N.tr.rd_step="Kaydırma başına süre";
+I18N.tr.rd_swipe="Zamanda ilerlemek için burayı kaydır";
+I18N.tr.rd_play="Oynat";
+I18N.tr.rd_pause="Duraklat";
+I18N.tr.rd_loading="Radar yükleniyor...";
+I18N.tr.rd_unavail="Radar haritası yüklenemedi. Bağlantını kontrol et.";
+I18N.tr.rd_light="Hafif";
+I18N.tr.rd_heavy="Şiddetli";
+I18N.tr.rd_note="Radar son 2 saati 10 dakikalık karelerle gösterir, bu yüzden 5 dakikalık adımlar iki kare arasında geçiş yapar. Şimdiden sonrası bir model tahminidir ve daha az kesindir.";
+I18N.tr.rd_credit="Radar: {a}. Tahmin: {b}. Harita: {c}.";
+I18N.tr.rd_prev="Daha önce";
+I18N.tr.rd_next="Daha sonra";
+I18N.tr.rd_center="Yerime ortala";
+I18N.tr.rd_fc_na="Tahmin katmanı kullanılamıyor.";
+I18N.ar.tab_radar="الرادار";
+I18N.ar.rd_radar="رادار";
+I18N.ar.rd_forecast="توقعات";
+I18N.ar.rd_step="الوقت لكل سحبة";
+I18N.ar.rd_swipe="اسحب هنا للتنقل عبر الوقت";
+I18N.ar.rd_play="تشغيل";
+I18N.ar.rd_pause="إيقاف مؤقت";
+I18N.ar.rd_loading="جارٍ تحميل الرادار...";
+I18N.ar.rd_unavail="تعذر تحميل خريطة الرادار. تحقق من اتصالك.";
+I18N.ar.rd_light="خفيف";
+I18N.ar.rd_heavy="غزير";
+I18N.ar.rd_note="يعرض الرادار آخر ساعتين بصور كل 10 دقائق، لذلك تمزج خطوات الـ 5 دقائق بين صورتين. بعد الآن هي توقعات نموذج، وهي أقل دقة.";
+I18N.ar.rd_credit="الرادار: {a}. التوقعات: {b}. الخريطة: {c}.";
+I18N.ar.rd_prev="أبكر";
+I18N.ar.rd_next="أحدث";
+I18N.ar.rd_center="التمركز على مكاني";
+I18N.ar.rd_fc_na="طبقة التوقعات غير متاحة.";
+I18N.zh.tab_radar="雷达";
+I18N.zh.rd_radar="雷达";
+I18N.zh.rd_forecast="预报";
+I18N.zh.rd_step="每次滑动的时间";
+I18N.zh.rd_swipe="在此滑动以浏览时间";
+I18N.zh.rd_play="播放";
+I18N.zh.rd_pause="暂停";
+I18N.zh.rd_loading="正在加载雷达...";
+I18N.zh.rd_unavail="无法加载雷达地图。请检查网络连接。";
+I18N.zh.rd_light="小";
+I18N.zh.rd_heavy="大";
+I18N.zh.rd_note="雷达显示过去 2 小时，每 10 分钟一帧，所以 5 分钟的步长会在两帧之间过渡。现在之后是模型预报，精度较低。";
+I18N.zh.rd_credit="雷达：{a}。预报：{b}。地图：{c}。";
+I18N.zh.rd_prev="更早";
+I18N.zh.rd_next="更晚";
+I18N.zh.rd_center="回到我的地点";
+I18N.zh.rd_fc_na="预报图层不可用。";
 
 /* ---------- constants ---------- */
-var W=640,H=300,L=44,R=14,T=14,B=30,PW=W-L-R,PH=H-T-B;
+var W=640,H=300,ML=44,MR=14,MT=14,MB=30,PW=W-ML-MR,PH=H-MT-MB;
 var LANGS=[['en','English'],['nl','Nederlands'],['es','Español'],['fr','Français'],['de','Deutsch'],['pt','Português'],['it','Italiano'],['tr','Türkçe'],['ar','العربية'],['zh','中文']];
 var LOCS={en:'en',nl:'nl',es:'es',fr:'fr',de:'de',pt:'pt-BR',it:'it',tr:'tr',ar:'ar',zh:'zh-CN'};
-var TABKEYS=['today','charts','week','places','settings'];
+var TABKEYS=['today','charts','radar','week','places','settings'];
 var HERE='@here';
 var DEF={lang:'',theme:'auto',sky:true,temp:'c',wind:'kmh',rain:'mm',time:'24',start:'today',refresh:10,
-  a_on:true,a_start:true,a_stop:false,a_dry:true,a_storm:true,a_lead:15,a_phone:false,q_on:false,q_from:23,q_to:7};
+  a_on:true,a_start:true,a_stop:false,a_dry:true,a_storm:true,a_lead:15,a_phone:false,q_on:false,q_from:23,q_to:7,r_step:5};
 var cfg={};
 var state={mode:'rain',data:null,now:null,place:null,cur:null,live:false,results:null,searched:false};
 var ch=null,loadedAt=0,tabIdx=0;
@@ -1058,29 +1331,29 @@ function series(){
 }
 function drawSeries(){
   var hs=state.data.hours,n=hs.length-1,S=series(),rain=state.mode==='rain';
-  var X=function(i){return L+PW*i/n;},Y=function(v){return T+PH*(1-(v-S.lo)/(S.hi-S.lo));};
+  var X=function(i){return ML+PW*i/n;},Y=function(v){return MT+PH*(1-(v-S.lo)/(S.hi-S.lo));};
   var pts=S.vals.map(function(v,i){return [X(i),Y(v)];});
-  var line=smooth(pts,T,T+PH);
-  var area=line+'L'+X(n)+','+(T+PH)+'L'+X(0)+','+(T+PH)+'Z';
+  var line=smooth(pts,MT,MT+PH);
+  var area=line+'L'+X(n)+','+(MT+PH)+'L'+X(0)+','+(MT+PH)+'Z';
   var svg='<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">'+
     '<stop offset="0%" style="stop-color:var(--'+S.color+');stop-opacity:.35"/>'+
     '<stop offset="100%" style="stop-color:var(--'+S.color+');stop-opacity:0"/></linearGradient></defs>';
   S.ticks.forEach(function(tk){
-    svg+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(tk)+'" y2="'+Y(tk)+'"/>'+
-      '<text class="axis" x="'+(L-8)+'" y="'+(Y(tk)+4)+'" text-anchor="end">'+tk+S.suffix+'</text>';
+    svg+='<line class="grid" x1="'+ML+'" x2="'+(W-MR)+'" y1="'+Y(tk)+'" y2="'+Y(tk)+'"/>'+
+      '<text class="axis" x="'+(ML-8)+'" y="'+(Y(tk)+4)+'" text-anchor="end">'+tk+S.suffix+'</text>';
   });
   if(rain){
     var maxmm=Math.max.apply(null,[3].concat(hs.map(function(h){return h.mm;})));
     hs.forEach(function(h,i){
       if(h.mm<=0)return;
       var bh=PH*0.45*h.mm/maxmm;
-      svg+='<rect class="bar1" x="'+(X(i)-6)+'" y="'+(T+PH-bh)+'" width="12" height="'+bh+'" rx="3"/>';
+      svg+='<rect class="bar1" x="'+(X(i)-6)+'" y="'+(MT+PH-bh)+'" width="12" height="'+bh+'" rx="3"/>';
     });
   }
   svg+='<path d="'+area+'" fill="url(#g)"/>';
   if(S.vals2){
     var fp=S.vals2.map(function(v,i){return [X(i),Y(v)];});
-    svg+='<path class="line feels" d="'+smooth(fp,T,T+PH)+'"/>';
+    svg+='<path class="line feels" d="'+smooth(fp,MT,MT+PH)+'"/>';
   }
   svg+='<path class="line '+S.cls+'" d="'+line+'"/>';
   hs.forEach(function(h,i){
@@ -1088,7 +1361,7 @@ function drawSeries(){
       svg+='<text class="axis" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+(i===0?esc(t('r_now')):fmtAx(h.t))+'</text>';
     }
   });
-  svg+='<line class="guide" id="guide" y1="'+T+'" y2="'+(T+PH)+'"/>'+
+  svg+='<line class="guide" id="guide" y1="'+MT+'" y2="'+(MT+PH)+'"/>'+
     '<circle class="dot '+S.cls+'" id="dot" r="7"/>';
   $('chart').innerHTML=svg;
   ch={kind:'series',X:X,Y:Y,vals:S.vals,max:n};
@@ -1112,17 +1385,17 @@ function drawNow(){
   var P=N.points,n=P.length;
   var maxmm=Math.max.apply(null,P.map(function(p){return p.mm;}));
   var hi=maxmm<=1?1:maxmm<=2?2:maxmm<=5?5:Math.ceil(maxmm/5)*5;
-  var slot=PW/n,X=function(i){return L+slot*(i+0.5);},Y=function(v){return T+PH*(1-v/hi);};
+  var slot=PW/n,X=function(i){return ML+slot*(i+0.5);},Y=function(v){return MT+PH*(1-v/hi);};
   var svg='';
   [0,hi/2,hi].forEach(function(tk){
-    svg+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(tk)+'" y2="'+Y(tk)+'"/>'+
-      '<text class="axis" x="'+(L-8)+'" y="'+(Y(tk)+4)+'" text-anchor="end">'+fmtAmt(tk)+'</text>';
+    svg+='<line class="grid" x1="'+ML+'" x2="'+(W-MR)+'" y1="'+Y(tk)+'" y2="'+Y(tk)+'"/>'+
+      '<text class="axis" x="'+(ML-8)+'" y="'+(Y(tk)+4)+'" text-anchor="end">'+fmtAmt(tk)+'</text>';
   });
   P.forEach(function(p,i){
     var bh=PH*p.mm/hi;
     if(p.mm>0&&bh<3)bh=3;
     if(bh<=0)return;
-    svg+='<rect class="nbar" data-i="'+i+'" x="'+(X(i)-slot*0.36)+'" y="'+(T+PH-bh)+'" width="'+(slot*0.72)+'" height="'+bh+'" rx="'+Math.min(4,slot*0.3)+'"/>';
+    svg+='<rect class="nbar" data-i="'+i+'" x="'+(X(i)-slot*0.36)+'" y="'+(MT+PH-bh)+'" width="'+(slot*0.72)+'" height="'+bh+'" rx="'+Math.min(4,slot*0.3)+'"/>';
   });
   P.forEach(function(p,i){
     var off=Math.round((p.t-P[0].t)/60000);
@@ -1130,8 +1403,8 @@ function drawNow(){
       svg+='<text class="axis" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+(off===0?esc(t('r_now')):fmtT(p.t))+'</text>';
     }
   });
-  if(maxmm<0.1)svg+='<text class="axis mid" x="'+(W/2)+'" y="'+(T+PH/2)+'" text-anchor="middle">'+esc(t('n_norain'))+'</text>';
-  svg+='<line class="guide" id="guide" y1="'+T+'" y2="'+(T+PH)+'" style="display:none"/>';
+  if(maxmm<0.1)svg+='<text class="axis mid" x="'+(W/2)+'" y="'+(MT+PH/2)+'" text-anchor="middle">'+esc(t('n_norain'))+'</text>';
+  svg+='<line class="guide" id="guide" y1="'+MT+'" y2="'+(MT+PH)+'" style="display:none"/>';
   $('chart').innerHTML=svg;
   ch={kind:'now',X:X,slot:slot,max:n-1};
   var src;
@@ -1316,6 +1589,7 @@ function loadForecast(lat,lon,name){
     state.cur={lat:lat,lon:lon,name:name};
     lsSet('rl_place',JSON.stringify(state.cur));
     renderAll();
+    rdOnPlace();
     status(t('st_updated',{t:fmtT(new Date())}));
     return loadNowcast(lat,lon).then(evaluateAlerts);
   }).then(function(x){ic.classList.remove('spin');return x;},function(e){ic.classList.remove('spin');throw e;});
@@ -1364,7 +1638,8 @@ var SCHEMA=[
     {k:'rain',t:'seg',l:'se_rainu',o:[['mm','mm'],['in','in']]},
     {k:'time',t:'seg',l:'se_time',o:[['24','24 h'],['12','12 h']]}]},
   {h:'se_general',rows:[
-    {k:'start',t:'select',l:'se_start',o:function(){return [['today',t('tab_today')],['charts',t('tab_charts')],['week',t('tab_week')],['places',t('tab_places')]];}},
+    {k:'start',t:'select',l:'se_start',o:function(){return [['today',t('tab_today')],['charts',t('tab_charts')],['radar',t('tab_radar')],['week',t('tab_week')],['places',t('tab_places')]];}},
+    {k:'r_step',t:'seg',l:'rd_step',o:function(){return [['5','5 '+t('d_min')],['60','1 '+t('d_h')]];}},
     {k:'refresh',t:'select',l:'se_refresh',o:function(){return [[5,'5 '+t('d_min')],[10,'10 '+t('d_min')],[15,'15 '+t('d_min')],[30,'30 '+t('d_min')]];}}]},
   {h:'se_alerts',rows:[
     {k:'a_on',t:'sw',l:'se_alerts_on'},
@@ -1405,7 +1680,7 @@ function renderSettings(){
       }else if(r.t==='phone'){
         h+='<div class="srow"><div class="srow inline" style="padding:0;border:0"><span class="sl">'+esc(t(r.l))+'</span><button type="button" class="sw" role="switch" aria-checked="'+(cfg.a_phone?'true':'false')+'" aria-label="'+esc(t(r.l))+'" data-sw="a_phone"><i></i></button></div><p class="snote">'+esc(phoneStatus())+'</p></div>';
       }else if(r.t==='seg'){
-        h+='<div class="srow"><span class="sl">'+esc(t(r.l))+'</span><div class="seg">'+r.o.map(function(o){
+        h+='<div class="srow"><span class="sl">'+esc(t(r.l))+'</span><div class="seg">'+(typeof r.o==='function'?r.o():r.o).map(function(o){
           return '<button type="button" data-set="'+r.k+'" data-val="'+o[0]+'" aria-pressed="'+(String(v)===String(o[0])?'true':'false')+'">'+esc(o[2]?t(o[1]):o[1])+'</button>';
         }).join('')+'</div></div>';
       }else if(r.t==='select'){
@@ -1450,15 +1725,18 @@ function renderAll(){
   hero();summary();dryWindow();strip();details();
   syncModes();drawChart();
   renderDays();renderPlaces();renderSettings();updateStar();
+  rdText();updateTimeUI();
   updInd();
 }
 function afterChange(k){
   if(k==='refresh'){renderSettings();return;}
+  if(k==='r_step'){R.t=rdClampT(R.t);rdText();rdRender();renderSettings();return;}
   if(k==='start'||k.indexOf('a_')===0||k.indexOf('q_')===0){renderSettings();return;}
   applyCfg();renderAll();
+  if(k==='theme')rdBase();
 }
 function setKey(k,val){
-  if(k==='refresh'||k==='a_lead'||k==='q_from'||k==='q_to')val=+val;
+  if(k==='refresh'||k==='a_lead'||k==='q_from'||k==='q_to'||k==='r_step')val=+val;
   cfg[k]=val;saveCfg();afterChange(k);
 }
 function onSettingsClick(e){
@@ -1716,6 +1994,7 @@ function syncTabs(){
   }
   var tb=tabEls[tabIdx];
   if(tb&&tabsEl){tabsEl.scrollLeft=tb.offsetLeft-(tabsEl.clientWidth-tb.offsetWidth)/2;}
+  if(tabIdx===RD_TAB)rdActivate();else rdStopPlay();
 }
 function updInd(){
   if(!tabEls.length)return;
@@ -1750,8 +2029,8 @@ function bind(){
   function pointer(e){
     if(!ch)return;
     var r=svgEl.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,i;
-    if(ch.kind==='now')i=clamp(Math.floor((x-L)/ch.slot),0,ch.max);
-    else i=clamp(Math.round((x-L)/PW*ch.max),0,ch.max);
+    if(ch.kind==='now')i=clamp(Math.floor((x-ML)/ch.slot),0,ch.max);
+    else i=clamp(Math.round((x-ML)/PW*ch.max),0,ch.max);
     setActive(i);
   }
   pager.addEventListener('scroll',function(){
@@ -1799,6 +2078,313 @@ function bind(){
   setInterval(maybeRefresh,60*1000);
 }
 
+/* ---------- Radar tab ---------- */
+var RD_TAB=2;
+var HID=0.001; /* Leaflet tile layers stay loaded at this near-zero opacity */
+var R={inited:false,map:null,T0:Math.floor(Date.now()/300000)*300,frames:[],framesAt:0,tMin:0,tMax:0,t:0,
+  grid:null,gridAt:0,gridKey:'',overlay:null,base:null,labels:null,pin:null,play:null,drag:null,canvas:null,
+  host:'https://tilecache.rainviewer.com',opacity:0.8,placeKey:''};
+var RAMP=[[0.05,[150,200,255],70],[0.2,[100,160,255],140],[0.6,[55,110,240],190],[1.5,[35,70,205],215],[4,[115,55,195],232],[10,[195,45,150],245]];
+
+function rdStep(){return +cfg.r_step===60?60:5;}
+function rdBounds(){
+  var s=rdStep();
+  return {lo:Math.ceil(R.tMin/s)*s,hi:Math.floor(R.tMax/s)*s};
+}
+function rdClampT(x){
+  var s=rdStep(),b=rdBounds();
+  return clamp(Math.round(x/s)*s,Math.min(b.lo,0),Math.max(b.hi,0));
+}
+function rdMsg(txt){
+  var m=$('rdMsg');
+  if(txt){m.textContent=txt;m.hidden=false;}else{m.textContent='';m.hidden=true;}
+}
+function isDark(){
+  if(cfg.theme==='dark')return true;
+  if(cfg.theme==='light')return false;
+  return typeof window.matchMedia==='function'&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+/* map setup */
+function initRadar(){
+  if(R.inited)return;
+  R.inited=true;
+  if(typeof L==='undefined'){rdMsg(t('rd_unavail'));return;}
+  var c=state.cur||{lat:50,lon:8};
+  R.map=L.map('map',{zoomControl:false,attributionControl:false,minZoom:3,maxZoom:10}).setView([+c.lat,+c.lon],state.cur?7:5);
+  R.map.createPane('radar').style.zIndex=300;
+  var lp=R.map.createPane('labels');lp.style.zIndex=350;lp.style.pointerEvents='none';
+  R.placeKey=state.cur?pkey(c.lat,c.lon):'';
+  rdBase();rdPin();
+  R.map.on('movestart',rdTrim);
+  R.map.on('moveend',function(){clearTimeout(R.mt);R.mt=setTimeout(function(){rdPreload(3);},350);});
+  rdMsg(t('rd_loading'));
+  rdLoad();
+}
+function rdBase(){
+  if(!R.map)return;
+  if(R.base)R.map.removeLayer(R.base);
+  if(R.labels)R.map.removeLayer(R.labels);
+  var key=isDark()?'dark':'light';
+  R.base=L.tileLayer('https://{s}.basemaps.cartocdn.com/'+key+'_nolabels/{z}/{x}/{y}.png',{subdomains:'abcd',maxZoom:19}).addTo(R.map);
+  R.labels=L.tileLayer('https://{s}.basemaps.cartocdn.com/'+key+'_only_labels/{z}/{x}/{y}.png',{subdomains:'abcd',maxZoom:19,pane:'labels'}).addTo(R.map);
+}
+function rdPin(){
+  if(!R.map||!state.cur)return;
+  var ll=[+state.cur.lat,+state.cur.lon];
+  if(R.pin)R.pin.setLatLng(ll);
+  else R.pin=L.marker(ll,{icon:L.divIcon({className:'rl-pin',html:'<span></span>',iconSize:[22,22],iconAnchor:[11,11]}),interactive:false,keyboard:false}).addTo(R.map);
+}
+
+/* data: RainViewer past frames + Open-Meteo forecast grid */
+function rdFrames(force){
+  if(!force&&R.frames.length&&Date.now()-R.framesAt<4*60000)return Promise.resolve();
+  return fetch('https://api.rainviewer.com/public/weather-maps.json').then(function(r){return r.json();}).then(function(j){
+    var past=(j.radar&&j.radar.past)||[];
+    if(!past.length)throw new Error('no frames');
+    var fr=past.map(function(f){return {time:f.time,path:f.path,layer:null};}).sort(function(a,b){return a.time-b.time;});
+    if(R.map){R.frames.forEach(function(f){if(f.layer)R.map.removeLayer(f.layer);});}
+    R.host=j.host||R.host;R.frames=fr;R.framesAt=Date.now();
+  }).catch(function(){R.frames=[];});
+}
+function rdGrid(){
+  if(!state.cur){R.grid=null;return Promise.resolve();}
+  var lat=+state.cur.lat,lon=+state.cur.lon,key=pkey(lat,lon);
+  if(R.grid&&R.gridKey===key&&Date.now()-R.gridAt<30*60000)return Promise.resolve();
+  var n=9,dLat=0.3,dLon=0.3/Math.max(0.3,Math.cos(lat*Math.PI/180));
+  var lat0=lat-dLat*(n-1)/2,lon0=lon-dLon*(n-1)/2,lats=[],lons=[],i,j;
+  for(j=0;j<n;j++)for(i=0;i<n;i++){lats.push((lat0+j*dLat).toFixed(3));lons.push((lon0+i*dLon).toFixed(3));}
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+lats.join(',')+'&longitude='+lons.join(',')+
+    '&hourly=precipitation&forecast_days=2&timeformat=unixtime&timezone=UTC';
+  return fetch(url).then(function(r){return r.json();}).then(function(arr){
+    if(!Array.isArray(arr))arr=[arr];
+    if(arr.length!==n*n||!arr[0].hourly)throw new Error('bad grid');
+    var times=arr[0].hourly.time,base=Math.floor(Date.now()/3600000)*3600,k0=times.indexOf(base);
+    if(k0<0)k0=0;
+    var frames=[],f,q,cnt=Math.min(25,times.length-k0);
+    for(f=0;f<cnt;f++){
+      var v=new Float32Array(n*n);
+      for(q=0;q<n*n;q++)v[q]=arr[q].hourly.precipitation[k0+f]||0;
+      frames.push(v);
+    }
+    if(cnt<2)throw new Error('short grid');
+    R.grid={n:n,frames:frames,times:times.slice(k0,k0+cnt),bounds:[[lat0,lon0],[lat0+dLat*(n-1),lon0+dLon*(n-1)]]};
+    R.gridAt=Date.now();R.gridKey=key;
+    if(R.overlay)R.overlay.setBounds(R.grid.bounds);
+  }).catch(function(){R.grid=null;});
+}
+function rdLoad(){
+  return Promise.all([rdFrames(false),rdGrid()]).then(rdSetup);
+}
+function rdSetup(){
+  var now=Math.floor(Date.now()/1000);
+  R.T0=R.frames.length?R.frames[R.frames.length-1].time:Math.floor(now/300)*300;
+  R.tMin=R.frames.length?-Math.round((R.T0-R.frames[0].time)/60):0;
+  R.tMax=R.grid?Math.max(0,Math.floor((R.grid.times[R.grid.times.length-1]-R.T0)/60)):0;
+  if(!R.frames.length&&!R.grid)rdMsg(t('rd_unavail'));else rdMsg('');
+  R.t=rdClampT(R.t);
+  rdText();
+  rdRender();
+  if(R.map){setTimeout(function(){rdPreload(999);},50);}
+}
+
+/* rendering */
+function rdLayer(k){
+  var f=R.frames[k];
+  if(!f.layer){
+    var size=(window.devicePixelRatio||1)>=2?512:256;
+    f.layer=L.tileLayer(R.host+f.path+'/'+size+'/{z}/{x}/{y}/2/1_1.png',
+      {pane:'radar',tileSize:256,opacity:HID,maxNativeZoom:7,maxZoom:12,updateWhenIdle:true,keepBuffer:1}).addTo(R.map);
+    f.op=HID;
+  }
+  return f.layer;
+}
+function rdFrameIndex(tsec){
+  var fr=R.frames,i=0;
+  while(i<fr.length-2&&fr[i+1].time<=tsec)i++;
+  return i;
+}
+function rdSetOp(k,op){
+  var l=rdLayer(k);
+  l.setOpacity(op);R.frames[k].op=op;
+}
+function rdShowRadar(tsec){
+  var fr=R.frames,i=rdFrameIndex(tsec),k;
+  var a=fr[i],b=fr[Math.min(i+1,fr.length-1)];
+  var f=b.time===a.time?0:clamp((tsec-a.time)/(b.time-a.time),0,1);
+  var used={};
+  rdSetOp(i,Math.max(HID,R.opacity*(1-f)));used[i]=1;
+  if(f>0&&i+1<fr.length){rdSetOp(i+1,Math.max(HID,R.opacity*f));used[i+1]=1;}
+  for(k=0;k<fr.length;k++){if(!used[k]&&fr[k].layer){fr[k].layer.setOpacity(HID);fr[k].op=HID;}}
+}
+function rdHideRadar(){
+  R.frames.forEach(function(f){if(f.layer){f.layer.setOpacity(HID);f.op=HID;}});
+}
+/* while the map moves, only the frames on screen keep loading tiles; the rest are re-added afterwards */
+function rdTrim(){
+  if(!R.map)return;
+  R.frames.forEach(function(f){
+    if(f.layer&&(f.op||0)<=HID){R.map.removeLayer(f.layer);f.layer=null;}
+  });
+}
+function rdPreload(radius){
+  if(!R.map||!R.frames.length)return;
+  var c=rdFrameIndex(R.T0+R.t*60);
+  R.frames.forEach(function(f,k){if(Math.abs(k-c)<=radius)rdLayer(k);});
+}
+function rdColor(v){
+  if(v<RAMP[0][0])return null;
+  var last=RAMP[RAMP.length-1];
+  if(v>=last[0])return [last[1][0],last[1][1],last[1][2],last[2]];
+  var i=0;
+  while(i<RAMP.length-2&&v>RAMP[i+1][0])i++;
+  var a=RAMP[i],b=RAMP[i+1],f=(v-a[0])/(b[0]-a[0]);
+  return [Math.round(a[1][0]+(b[1][0]-a[1][0])*f),Math.round(a[1][1]+(b[1][1]-a[1][1])*f),Math.round(a[1][2]+(b[1][2]-a[1][2])*f),Math.round(a[2]+(b[2]-a[2])*f)];
+}
+function rdGridImage(tsec){
+  var g=R.grid,n=g.n,S=128;
+  var k=clamp((tsec-g.times[0])/3600,0,g.frames.length-1),a=Math.floor(k),b=Math.min(a+1,g.frames.length-1),f=k-a;
+  var A=g.frames[a],B=g.frames[b],v=new Float32Array(n*n),q;
+  for(q=0;q<n*n;q++)v[q]=A[q]*(1-f)+B[q]*f;
+  var cv=R.canvas||(R.canvas=document.createElement('canvas'));
+  cv.width=S;cv.height=S;
+  var ctx=cv.getContext('2d'),img=ctx.createImageData(S,S),d=img.data,x,y;
+  for(y=0;y<S;y++){
+    var gy=(1-y/(S-1))*(n-1),j0=Math.min(n-2,Math.floor(gy)),fy=gy-j0;
+    for(x=0;x<S;x++){
+      var gx=x/(S-1)*(n-1),i0=Math.min(n-2,Math.floor(gx)),fx=gx-i0;
+      var v00=v[j0*n+i0],v10=v[j0*n+i0+1],v01=v[(j0+1)*n+i0],v11=v[(j0+1)*n+i0+1];
+      var val=(v00*(1-fx)+v10*fx)*(1-fy)+(v01*(1-fx)+v11*fx)*fy;
+      var c=rdColor(val),p=(y*S+x)*4;
+      if(c){d[p]=c[0];d[p+1]=c[1];d[p+2]=c[2];d[p+3]=c[3];}
+    }
+  }
+  ctx.putImageData(img,0,0);
+  return cv.toDataURL('image/png');
+}
+function rdDrawForecast(tsec){
+  var url=rdGridImage(tsec);
+  if(!R.overlay){
+    R.overlay=L.imageOverlay(url,R.grid.bounds,{pane:'radar',opacity:0.9,interactive:false}).addTo(R.map);
+  }else{
+    R.overlay.setUrl(url);R.overlay.setOpacity(0.9);
+  }
+}
+function rdRender(){
+  updateTimeUI();
+  if(!R.map)return;
+  var tsec=R.T0+R.t*60;
+  if(R.t>0&&R.grid){
+    rdHideRadar();
+    rdDrawForecast(tsec);
+  }else{
+    if(R.overlay)R.overlay.setOpacity(0);
+    if(R.frames.length)rdShowRadar(tsec);
+  }
+}
+function updateTimeUI(){
+  var tsec=R.T0+R.t*60;
+  $('rdClock').textContent=fmtT(new Date(tsec*1000));
+  $('rdRel').textContent=R.t===0?t('r_now'):(R.t<0?'−':'+')+dur(Math.abs(R.t));
+  var fc=R.t>0,bd=$('rdBadge');
+  bd.textContent=fc?t('rd_forecast'):t('rd_radar');
+  bd.className='mapbadge'+(fc?' fc':'');
+  var range=(R.tMax-R.tMin)||1;
+  $('ovpos').style.left=(100*(R.t-R.tMin)/range)+'%';
+  $('ovnow').style.left=(100*(0-R.tMin)/range)+'%';
+  var b=rdBounds();
+  $('rdPrev').disabled=R.t<=Math.min(b.lo,0);
+  $('rdNext').disabled=R.t>=Math.max(b.hi,0);
+  $('rdPlay').textContent=R.play?t('rd_pause'):t('rd_play');
+}
+function rdText(){
+  $('rdNote').textContent=t('rd_note')+((R.grid||!state.cur)?'':' '+t('rd_fc_na'));
+  var link=function(u,x){return '<a href="'+u+'" target="_blank" rel="noopener">'+x+'</a>';};
+  $('rdCredit').innerHTML=t('rd_credit',{
+    a:link('https://www.rainviewer.com/','RainViewer'),
+    b:link('https://open-meteo.com','Open-Meteo.com'),
+    c:link('https://www.openstreetmap.org/copyright','© OpenStreetMap')+' · '+link('https://carto.com/attributions','© CARTO')
+  });
+  var bs=document.querySelectorAll('#rdStepSeg button'),i;
+  for(i=0;i<bs.length;i++){
+    var v=+bs[i].getAttribute('data-rstep');
+    bs[i].textContent=v===60?('1 '+t('d_h')):(v+' '+t('d_min'));
+    bs[i].setAttribute('aria-pressed',v===rdStep()?'true':'false');
+  }
+}
+
+/* moving through time */
+function rdSet(x){R.t=rdClampT(x);rdRender();}
+function rdStepBy(dir){
+  var nt=rdClampT(R.t+dir*rdStep());
+  if(nt!==R.t){R.t=nt;rdRender();}
+}
+function rdStopPlay(){
+  if(R.play){clearInterval(R.play);R.play=null;updateTimeUI();}
+}
+function rdTogglePlay(){
+  if(R.play){rdStopPlay();return;}
+  var s=rdStep(),end=Math.min(R.tMax,s===60?360:120),b=rdBounds();
+  if(R.t>=end)R.t=rdClampT(b.lo);
+  R.play=setInterval(function(){
+    var nt=R.t+rdStep();
+    if(nt>end)nt=rdBounds().lo;
+    R.t=rdClampT(nt);rdRender();
+  },s===60?900:450);
+  updateTimeUI();
+}
+function rdSetStep(v){
+  cfg.r_step=+v===60?60:5;saveCfg();
+  R.t=rdClampT(R.t);
+  rdText();rdRender();renderSettings();
+}
+function rdActivate(){
+  if(!R.inited){initRadar();return;}
+  if(R.map){R.map.invalidateSize();}
+  if(Date.now()-R.framesAt>5*60000||(R.grid&&Date.now()-R.gridAt>30*60000))rdLoad();
+}
+function rdOnPlace(){
+  if(!R.inited||!R.map||!state.cur)return;
+  var k=pkey(state.cur.lat,state.cur.lon);
+  if(R.placeKey!==k){R.placeKey=k;R.map.setView([+state.cur.lat,+state.cur.lon],7);}
+  rdPin();
+  rdLoad();
+}
+function rdBind(){
+  var sc=$('scrub');
+  sc.addEventListener('pointerdown',function(e){
+    rdStopPlay();
+    R.drag={x:e.clientX,done:false};
+    if(sc.setPointerCapture&&e.pointerId!==undefined){try{sc.setPointerCapture(e.pointerId);}catch(x){}}
+  });
+  sc.addEventListener('pointermove',function(e){
+    if(!R.drag||R.drag.done)return;
+    var dx=e.clientX-R.drag.x;
+    if(Math.abs(dx)>=24){R.drag.done=true;rdStepBy(dx>0?1:-1);}
+  });
+  var end=function(){R.drag=null;};
+  sc.addEventListener('pointerup',end);
+  sc.addEventListener('pointercancel',end);
+  $('rdPrev').addEventListener('click',function(){rdStopPlay();rdStepBy(-1);});
+  $('rdNext').addEventListener('click',function(){rdStopPlay();rdStepBy(1);});
+  $('rdPlay').addEventListener('click',rdTogglePlay);
+  $('ovbar').addEventListener('pointerdown',function(e){
+    var r=$('ovbar').getBoundingClientRect();
+    rdStopPlay();
+    rdSet(R.tMin+clamp((e.clientX-r.left)/(r.width||1),0,1)*(R.tMax-R.tMin));
+  });
+  $('rdStepSeg').addEventListener('click',function(e){
+    var el=e.target.closest?e.target.closest('[data-rstep]'):null;
+    if(el)rdSetStep(el.getAttribute('data-rstep'));
+  });
+  $('rdCenter').addEventListener('click',function(){
+    if(R.map&&state.cur)R.map.setView([+state.cur.lat,+state.cur.lon],7);
+  });
+  $('rdZoomIn').addEventListener('click',function(){if(R.map)R.map.zoomIn();});
+  $('rdZoomOut').addEventListener('click',function(){if(R.map)R.map.zoomOut();});
+}
+
+
 /* ---------- start ---------- */
 loadCfg();
 applyCfg();
@@ -1809,16 +2395,17 @@ var saved=readSaved();
 if(saved){state.place=saved.name;state.cur=saved;}
 renderAll();
 bind();
+rdBind();
 (function(){
-  var idx=saved?Math.max(0,TABKEYS.indexOf(cfg.start)):3;
-  if(idx<0||idx>3)idx=0;
+  var idx=saved?Math.max(0,TABKEYS.indexOf(cfg.start)):4;
+  if(idx<0||idx>4)idx=0;
   goTab(idx,false);
 })();
 if(saved){refreshSaved(false);}
 else{status(t('st_sample'));}
 
 if(typeof window!=='undefined'&&window.__RL_TEST){
-  window.__RL_TEST={state:state,get cfg(){return cfg;},t:t,evaluateAlerts:evaluateAlerts,setKey:setKey,renderAll:renderAll,goTab:goTab,parseBuienradar:parseBuienradar,I18N:I18N,setActive:setActive,setMode:setMode,fireAlert:fireAlert,codeInfo:codeInfo,icon:icon,buildWorkflow:buildWorkflow,getTopic:getTopic};
+  window.__RL_TEST={state:state,get cfg(){return cfg;},t:t,evaluateAlerts:evaluateAlerts,setKey:setKey,renderAll:renderAll,goTab:goTab,parseBuienradar:parseBuienradar,I18N:I18N,setActive:setActive,setMode:setMode,fireAlert:fireAlert,codeInfo:codeInfo,icon:icon,buildWorkflow:buildWorkflow,getTopic:getTopic,R:R,rdSet:rdSet,rdStepBy:rdStepBy,rdSetStep:rdSetStep,rdLoad:rdLoad,rdColor:rdColor,rdGridImage:rdGridImage,initRadar:initRadar,rdTogglePlay:rdTogglePlay,rdClampT:rdClampT,rdOnPlace:rdOnPlace};
 }
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   navigator.serviceWorker.register('sw.js').catch(function(){});
